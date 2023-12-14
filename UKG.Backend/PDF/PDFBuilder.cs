@@ -24,8 +24,7 @@ public class PDFBuilder : IPDFBuilder
             return stream;
         });
     }
-
-    private static Action<IDocumentContainer> DocumentBuilder()
+    public static Action<IDocumentContainer> DocumentBuilder()
     {
         return container =>
         {
@@ -45,6 +44,7 @@ public class PDFBuilder : IPDFBuilder
                     .Column(x =>
                     {
                         x.Spacing(20);
+                        x.Item().Text(Placeholders.LoremIpsum());
                         x.Item().Text(Placeholders.LoremIpsum());
                         x.Item().Image(Placeholders.Image(200, 100));
                     });

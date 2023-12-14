@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Backend.Test", "UKG.Bac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Storage.Test", "UKG.Storage.Test\UKG.Storage.Test.csproj", "{035697FF-06B7-4F94-9D1D-A1367A43A4C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Console", "UKG.Console\UKG.Console.csproj", "{DB44FB18-78F0-4691-B879-A999E48A2405}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB44FB18-78F0-4691-B879-A999E48A2405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB44FB18-78F0-4691-B879-A999E48A2405}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB44FB18-78F0-4691-B879-A999E48A2405}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB44FB18-78F0-4691-B879-A999E48A2405}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
