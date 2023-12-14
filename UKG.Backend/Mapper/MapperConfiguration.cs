@@ -6,7 +6,7 @@ public class MapperConfiguration : Profile
 {
     public MapperConfiguration()
     {
-        CreateMap<Storage.Models.UKGSummary, Models.UKGSummary>().ReverseMap();
+        CreateMap<Storage.Models.UkgSummary, Models.UkgSummary>().ReverseMap();
     }
 
 }

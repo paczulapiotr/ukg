@@ -1,15 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace UKG.Storage.Context;
 
-public class UKGDbContextFactory : IDesignTimeDbContextFactory<UKGDbContext>
+public interface IUkgDbContextFactory {
+    UkgDbContext CreateDbContext();
+}
+
+public class UkgDbContextFactory : IUkgDbContextFactory
 {
-    public UKGDbContext CreateDbContext(string[] args)
+    public UkgDbContext CreateDbContext()
     {
-        var optionsBuilder = new DbContextOptionsBuilder<UKGDbContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<UkgDbContext>();
         optionsBuilder.UseSqlite("Data Source=ukg_database.db");
 
-        return new UKGDbContext(optionsBuilder.Options);
+        return new UkgDbContext(optionsBuilder.Options);
     }
 }

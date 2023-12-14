@@ -7,7 +7,7 @@ namespace UKG.Backend.PDF;
 
 public class PDFBuilder : IPDFBuilder
 {
-    public async Task<Stream> Create(UKGSummary ukgSummary)
+    public async Task<Stream> Create(UkgSummary ukgSummary)
     {
         return await Task.Run(() =>
         {

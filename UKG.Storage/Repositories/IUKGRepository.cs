@@ -2,9 +2,9 @@ using UKG.Storage.Models;
 
 namespace UKG.Storage.Repositories;
 
-public interface IUKGRepository
+public interface IUkgRepository
 {
-    Task Add(UKGSummary ukgSummary);
-    Task<UKGSummary> FindOneByID(int id);
-    IQueryable<UKGSummary> Query();
+    Task Add(UkgSummary ukgSummary);
+    Task<UkgSummary> FindOneByID(int id);
+    IQueryable<UkgSummary> Query();
 }

@@ -4,12 +4,12 @@ using UKG.Storage.Models;
 
 namespace UKG.Storage.Configuration;
 
-internal class UKGSummaryEntityConfiguration : IEntityTypeConfiguration<UKGSummary>
+internal class UkgSummaryEntityConfiguration : IEntityTypeConfiguration<UkgSummary>
 {
-    public void Configure(EntityTypeBuilder<UKGSummary> builder)
+    public void Configure(EntityTypeBuilder<UkgSummary> builder)
     {
         builder
             .Property(x => x.FullName)
-            .HasComputedColumnSql($"{nameof(UKGSummary.FirstName)} || ' ' || {nameof(UKGSummary.LastName)}");
+            .HasComputedColumnSql($"{nameof(UkgSummary.FirstName)} || ' ' || {nameof(UkgSummary.LastName)}");
     }
 }

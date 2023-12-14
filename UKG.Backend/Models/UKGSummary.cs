@@ -1,6 +1,6 @@
 namespace UKG.Backend.Models;
 
-public record UKGSummary
+public record UkgSummary
 {
     public int? ID { get; set; }
     public required string PESEL { get; set; }

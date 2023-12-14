@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UKG.Storage.Models;
 
-public record UKGSummary
+public record UkgSummary
 {
     public int ID { get; set; }
     public int SubmitterID { get; set; }

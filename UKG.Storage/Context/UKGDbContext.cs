@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using UKG.Storage.Models;
 
-public class UKGDbContext : DbContext
+public class UkgDbContext : DbContext
 {
-    public DbSet<UKGSummary> UKGSummaries { get; set; }
+    public DbSet<UkgSummary> UKGSummaries { get; set; }
 
-    public UKGDbContext(DbContextOptions<UKGDbContext> options) : base(options)
+    public UkgDbContext(DbContextOptions<UkgDbContext> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UKGDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UkgDbContext).Assembly);
     }
 }

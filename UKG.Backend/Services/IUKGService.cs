@@ -2,8 +2,8 @@ using UKG.Backend.Models;
 
 namespace UKG.Backend.Services;
 
-public interface IUKGService
+public interface IUkgService
 {
-    Task Add(UKGSummary ukgSummary);
-    Task<IEnumerable<UKGSummary>> Find(string? name, string? pesel);
+    Task Add(UkgSummary ukgSummary);
+    Task<IEnumerable<UkgSummary>> Find(string? name, string? pesel);
 }
