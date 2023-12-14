@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Backend", "UKG.Backend\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Storage", "UKG.Storage\UKG.Storage.csproj", "{459D8CAF-80E8-4A55-B5F4-04CAD5DAB048}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Backend.Test", "UKG.Backend.Test\UKG.Backend.Test.csproj", "{7A0EA193-6F87-4032-BE52-0CBC27D02C38}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Storage.Test", "UKG.Storage.Test\UKG.Storage.Test.csproj", "{035697FF-06B7-4F94-9D1D-A1367A43A4C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{459D8CAF-80E8-4A55-B5F4-04CAD5DAB048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{459D8CAF-80E8-4A55-B5F4-04CAD5DAB048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{459D8CAF-80E8-4A55-B5F4-04CAD5DAB048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0EA193-6F87-4032-BE52-0CBC27D02C38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0EA193-6F87-4032-BE52-0CBC27D02C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0EA193-6F87-4032-BE52-0CBC27D02C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0EA193-6F87-4032-BE52-0CBC27D02C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{035697FF-06B7-4F94-9D1D-A1367A43A4C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
