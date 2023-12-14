@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace UKG.Storage.Models;
 
 public record UKGSummary
@@ -6,7 +8,10 @@ public record UKGSummary
     public int SubmitterID { get; set; }
     public required string PESEL { get; set; }
     public required string FirstName { get; set; }
-    public required string SecondName { get; set; }
+    public required string LastName { get; set; }
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public required string FullName { get; set; }
     public DateOnly Birthday { get; set; }
     public string? Ao { get; set; }
     public string? ACS { get; set; }
