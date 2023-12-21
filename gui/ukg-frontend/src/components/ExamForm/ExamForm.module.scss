@@ -1,0 +1,16 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 0.5rem;
+  /* Optional: Style for better visualization */
+  border: 1px solid #333;
+  padding: 1rem;
+
+  // cell
+  & > * {
+    margin: 0.2rem;
+    padding: 1rem;
+    /* Optional: Style for better visualization */
+    border: 1px solid #888;
+  }
+}

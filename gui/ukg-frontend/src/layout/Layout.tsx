@@ -11,7 +11,8 @@ import {
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
-
+import { ExamForm } from "../components/ExamForm";
+import styles from "./Layout.module.scss";
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -72,18 +73,17 @@ const MainLayout: React.FC = () => {
           items={items}
         />
       </Sider>
-      <Layout>
+      <Layout className={styles.layout}>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: "1rem" }}>
           <div
             style={{
-              padding: 24,
-              minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
+            className={styles.content}
           >
-            Bill is a cat.
+            <ExamForm />
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
