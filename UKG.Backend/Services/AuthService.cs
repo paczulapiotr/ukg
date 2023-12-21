@@ -3,8 +3,8 @@ namespace UKG.Backend.Services;
 
 public class AuthService : IAuthService
 {
-    public Task<int> GetUserID()
+    public async Task<int> GetUserID()
     {
-        throw new NotImplementedException();
+        return await ValueTask.FromResult(1);
     }
 }

@@ -2,6 +2,7 @@ using UKG.Backend.Models;
 using UKG.Storage.Repositories;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+
 namespace UKG.Backend.Services;
 
 public class UkgService : IUkgService
@@ -26,8 +27,9 @@ public class UkgService : IUkgService
         await _repository.Add(ukg);
     }
 
-    public async Task<IEnumerable<UkgSummary>> Find(string? name, string? pesel)
+    public async Task<IEnumerable<UkgSummary>> Find(int page = 1, PageSize = 10, string? name, string? pesel)
     {
+        var submitterId = _authService.GetUserID();
         var query = _repository.Query();
 
         if (name is not null)
@@ -41,8 +43,10 @@ public class UkgService : IUkgService
         }
 
         var ukgs = await query
+            .Where(u => u.SubmitterID == submitterId)
             .OrderByDescending(u => u.FullName)
-            .Take(10)
+            .Skip(Math.Min(0, (page - 1) * PageSize))
+            .Take(PageSize)
             .ToListAsync();
 
         return _mapper.Map<UkgSummary[]>(ukgs);
