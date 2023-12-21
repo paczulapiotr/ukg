@@ -3,7 +3,7 @@
 namespace UKG.Api.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("api/[controller]/[action]")]
 public class UkgController : ControllerBase
 {
     private readonly ILogger<UkgController> _logger;
