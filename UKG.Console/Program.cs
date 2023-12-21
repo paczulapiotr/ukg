@@ -12,7 +12,10 @@
 using Microsoft.EntityFrameworkCore;
 using UKG.Storage.Context;
 
-using var ctx = new UkgDbContextFactory().CreateDbContext();
+using var ctx = new UkgDbContextFactory()
+    .WithConnectionString("Data Source=ukg_database.sqlite")
+    .CreateDbContext();
+
 var pending = await ctx.Database.GetPendingMigrationsAsync();
 
 if (pending is not null && pending.Any())

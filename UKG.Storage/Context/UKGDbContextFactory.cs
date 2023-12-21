@@ -2,17 +2,26 @@
 
 namespace UKG.Storage.Context;
 
-public interface IUkgDbContextFactory {
+public interface IUkgDbContextFactory
+{
     UkgDbContext CreateDbContext();
 }
 
-public class UkgDbContextFactory : IUkgDbContextFactory
+public class UkgDbContextFactory : IDbContextFactory<UkgDbContext>
 {
+    private _connString;
+
+    public UkgDbContextFactory WithConnectionString(string connString)
+    {
+        _connString = connString;
+        return this;
+    }
+
     public UkgDbContext CreateDbContext()
     {
         var optionsBuilder = new DbContextOptionsBuilder<UkgDbContext>();
-        optionsBuilder.UseSqlite("Data Source=ukg_database.db");
+        optionsBuilder.UseSqlite(_connString);
 
-        return new UkgDbContext(optionsBuilder.Options);
+        return new UkgDbContext();
     }
 }
