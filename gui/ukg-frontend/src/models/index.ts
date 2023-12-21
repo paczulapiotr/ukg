@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 export type UkgExamination = {
-  ID?: number;
+  ID?: string;
   PESEL: string;
   FirstName: string;
   SecondName: string;
@@ -36,5 +36,5 @@ export type UkgExamination = {
 };
 
 export type UkgExaminationForm = UkgExamination & {
-  Birthday: Dayjs | null | undefined;
+  BirthdayDate?: Dayjs;
 };

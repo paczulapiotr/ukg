@@ -2,7 +2,6 @@ import { Button, Form } from "antd";
 import styles from "./ExamForm.module.scss";
 import NumberSection from "./NumberSection";
 import { UkgExaminationForm } from "../../models";
-import { useTranslation } from "react-i18next";
 import TextInput from "./common/TextInput";
 import TextAreaInput from "./common/TextAreaInput";
 import DatePickerInput from "./common/DatePickerInput";
@@ -12,14 +11,20 @@ const layout = {
   wrapperCol: { span: 16 },
 };
 
-type Props = {};
+const editValue: Partial<UkgExaminationForm> = {
+  ID: "123",
+  FirstName: "Piotr",
+  SecondName: "Paczula",
+};
 
+type Props = {};
+const IDName: keyof UkgExaminationForm = "ID";
 const ExamForm = ({}: Props) => {
   const [form] = Form.useForm<UkgExaminationForm>();
-  const { t } = useTranslation("common");
+
   const onFinish = (values: UkgExaminationForm) => {
     console.log(values);
-    console.log("Date:", values.Birthday.format("DD/MM/YYYY"));
+    console.log("Date:", values.BirthdayDate?.format("DD/MM/YYYY"));
   };
 
   const onReset = () => {
@@ -33,15 +38,17 @@ const ExamForm = ({}: Props) => {
         form={form}
         name="ukg-examination"
         onFinish={onFinish}
+        initialValues={editValue}
         onSubmitCapture={(e) => console.log(e)}
         style={{ minWidth: "600px" }}
       >
+        <Form.Item name={IDName} hidden />
         <div className={styles["grid-container"]}>
           <TextInput name="PESEL" />
           <TextInput name="FirstName" />
           <TextInput name="SecondName" />
 
-          <DatePickerInput name="Birthday" />
+          <DatePickerInput name="BirthdayDate" />
 
           <TextInput name="Ao" />
           <TextInput name="ACS" />
