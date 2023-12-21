@@ -9,7 +9,7 @@ public interface IUkgDbContextFactory
 
 public class UkgDbContextFactory : IDbContextFactory<UkgDbContext>
 {
-    private _connString;
+    private string? _connString;
 
     public UkgDbContextFactory WithConnectionString(string connString)
     {
@@ -21,7 +21,7 @@ public class UkgDbContextFactory : IDbContextFactory<UkgDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<UkgDbContext>();
         optionsBuilder.UseSqlite(_connString);
-
-        return new UkgDbContext();
+        
+        return new UkgDbContext(optionsBuilder.Options);
     }
 }
