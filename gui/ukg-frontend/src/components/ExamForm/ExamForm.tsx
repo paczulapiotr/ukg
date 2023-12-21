@@ -1,5 +1,6 @@
 import { DatePicker, Form, Input, Typography } from "antd";
 import styles from "./ExamForm.module.scss";
+import NumberSection from "./NumberSection";
 
 const layout = {
   labelCol: { span: 8 },
@@ -57,6 +58,13 @@ const ExamForm = ({}: Props) => {
           <Input placeholder="RV" />
         </>
         <>
+          <Typography>EF:</Typography>
+          <Input placeholder="EF" />
+        </>
+      </div>
+      <NumberSection />
+      <div className={styles["grid-container"]}>
+        <>
           <Typography>Kurczliwość:</Typography>
           <Input.TextArea
             placeholder="Kurczliwość"
@@ -70,6 +78,8 @@ const ExamForm = ({}: Props) => {
             autoSize={{ minRows: 2, maxRows: 10 }}
           />
         </>
+      </div>
+      <div className={styles["grid-container"]}>
         {/* Zastawka mitralna */}
         <>
           <Typography>Zastawka mitralna:</Typography>
@@ -96,6 +106,8 @@ const ExamForm = ({}: Props) => {
           <Typography>Gmax:</Typography>
           <Input placeholder="Gmax" />
         </>
+      </div>
+      <div className={styles["grid-container"]}>
         {/* Zastawka trójdzielna */}
         <>
           <Typography>Zastawka trójdzielna:</Typography>
@@ -122,6 +134,8 @@ const ExamForm = ({}: Props) => {
           <Typography>Gmax:</Typography>
           <Input placeholder="Gmax" />
         </>
+      </div>
+      <div className={styles["grid-container"]}>
         {/* Zastawka pnia płucnego */}
         <>
           <Typography>Zastawka pnia płucnego:</Typography>
