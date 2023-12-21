@@ -1,6 +1,11 @@
-import { DatePicker, Form, Input, Typography } from "antd";
+import { Button, Form } from "antd";
 import styles from "./ExamForm.module.scss";
 import NumberSection from "./NumberSection";
+import { UkgExaminationForm } from "../../models";
+import { useTranslation } from "react-i18next";
+import TextInput from "./common/TextInput";
+import TextAreaInput from "./common/TextAreaInput";
+import DatePickerInput from "./common/DatePickerInput";
 
 const layout = {
   labelCol: { span: 8 },
@@ -10,10 +15,11 @@ const layout = {
 type Props = {};
 
 const ExamForm = ({}: Props) => {
-  const [form] = Form.useForm();
-
-  const onFinish = (values: any) => {
+  const [form] = Form.useForm<UkgExaminationForm>();
+  const { t } = useTranslation("common");
+  const onFinish = (values: UkgExaminationForm) => {
     console.log(values);
+    console.log("Date:", values.Birthday.format("DD/MM/YYYY"));
   };
 
   const onReset = () => {
@@ -21,147 +27,54 @@ const ExamForm = ({}: Props) => {
   };
 
   return (
-    <Form
-      {...layout}
-      form={form}
-      name="ukg-examination"
-      onFinish={onFinish}
-      style={{ minWidth: "600px" }}
-    >
-      <div className={styles["grid-container"]}>
-        <>
-          <Typography>PESEL:</Typography>
-          <Input placeholder="PESEL" />
-        </>
-        <>
-          <Typography>Imię i nazwisko:</Typography>
-          <Input placeholder="Imię i nazwisko" />
-        </>
-        <>
-          <Typography>Data urodzenia:</Typography>
-          <DatePicker />
-        </>
-        <>
-          <Typography>Ao:</Typography>
-          <Input placeholder="Ao" />
-        </>
-        <>
-          <Typography>Acs:</Typography>
-          <Input placeholder="Acs" />
-        </>
-        <>
-          <Typography>LA:</Typography>
-          <Input placeholder="LA" />
-        </>
-        <>
-          <Typography>RV:</Typography>
-          <Input placeholder="RV" />
-        </>
-        <>
-          <Typography>EF:</Typography>
-          <Input placeholder="EF" />
-        </>
-      </div>
-      <NumberSection />
-      <div className={styles["grid-container"]}>
-        <>
-          <Typography>Kurczliwość:</Typography>
-          <Input.TextArea
-            placeholder="Kurczliwość"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-        <>
-          <Typography>Osierdzie:</Typography>
-          <Input.TextArea
-            placeholder="Osierdzie"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-      </div>
-      <div className={styles["grid-container"]}>
-        {/* Zastawka mitralna */}
-        <>
-          <Typography>Zastawka mitralna:</Typography>
-          <Input.TextArea
-            placeholder="Zastawka mitralna"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-        {/* Badanie dopplerowskie */}
-        <>
-          <Typography>Badanie dopplerowskie:</Typography>
-          <Input.TextArea
-            placeholder="Badanie dopplerowskie"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-        {/* Vmax */}
-        <>
-          <Typography>Vmax:</Typography>
-          <Input placeholder="Vmax" />
-        </>
-        {/* Gmax */}
-        <>
-          <Typography>Gmax:</Typography>
-          <Input placeholder="Gmax" />
-        </>
-      </div>
-      <div className={styles["grid-container"]}>
-        {/* Zastawka trójdzielna */}
-        <>
-          <Typography>Zastawka trójdzielna:</Typography>
-          <Input.TextArea
-            placeholder="Zastawka trójdzielna"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-        {/* Badanie dopplerowskie */}
-        <>
-          <Typography>Badanie dopplerowskie:</Typography>
-          <Input.TextArea
-            placeholder="Badanie dopplerowskie"
-            autoSize={{ minRows: 3, maxRows: 10 }}
-          />
-        </>
-        {/* Vmax */}
-        <>
-          <Typography>Vmax:</Typography>
-          <Input placeholder="Vmax" />
-        </>
-        {/* Gmax */}
-        <>
-          <Typography>Gmax:</Typography>
-          <Input placeholder="Gmax" />
-        </>
-      </div>
-      <div className={styles["grid-container"]}>
-        {/* Zastawka pnia płucnego */}
-        <>
-          <Typography>Zastawka pnia płucnego:</Typography>
-          <Input.TextArea
-            placeholder="Zastawka pnia płucnego"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-        {/* Badanie dopplerowskie */}
-        <>
-          <Typography>Badanie dopplerowskie:</Typography>
-          <Input.TextArea
-            placeholder="Badanie dopplerowskie"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-        {/* Wnioski */}
-        <>
-          <Typography>Wnioski:</Typography>
-          <Input.TextArea
-            placeholder="Wnioski"
-            autoSize={{ minRows: 2, maxRows: 10 }}
-          />
-        </>
-      </div>
-    </Form>
+    <div>
+      <Form
+        {...layout}
+        form={form}
+        name="ukg-examination"
+        onFinish={onFinish}
+        onSubmitCapture={(e) => console.log(e)}
+        style={{ minWidth: "600px" }}
+      >
+        <div className={styles["grid-container"]}>
+          <TextInput name="PESEL" />
+          <TextInput name="FirstName" />
+          <TextInput name="SecondName" />
+
+          <DatePickerInput name="Birthday" />
+
+          <TextInput name="Ao" />
+          <TextInput name="ACS" />
+          <TextInput name="LA" />
+          <TextInput name="RV" />
+          <TextInput name="EF" />
+        </div>
+        <NumberSection />
+        <div className={styles["grid-container"]}>
+          <TextAreaInput name="Kurczliwosc" />
+          <TextAreaInput name="Osierdzie" />
+        </div>
+        <div className={styles["grid-container"]}>
+          {/* Zastawka mitralna */}
+          <TextAreaInput name="ZastawkaMitralna" />
+          <TextAreaInput name="DopplerMitralna" />
+          <TextInput name="VmaxMitralna" />
+          <TextInput name="GmaxMitralna" />
+        </div>
+        <div className={styles["grid-container"]}>
+          <TextAreaInput name="ZastawkaTrojdzielna" />
+          <TextAreaInput name="DopplerTrojdzielna" />
+          <TextInput name="VmaxTrojdzielna" />
+          <TextInput name="GmaxTrojdzielna" />
+        </div>
+        <div className={styles["grid-container"]}>
+          <TextAreaInput name="ZastawkaPnia" />
+          <TextAreaInput name="DopplerPnia" />
+          <TextAreaInput name="Summary" />
+        </div>
+      </Form>
+      <Button onClick={() => form.submit()}>Save</Button>
+    </div>
   );
 };
 
