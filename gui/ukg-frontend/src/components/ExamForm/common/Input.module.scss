@@ -1,0 +1,25 @@
+@import "../../../styles/common.scss";
+.label {
+  background-color: white;
+  @include border();
+  padding: 0.2rem;
+  height: 100%;
+}
+
+.input {
+  background-color: white;
+  margin: 0;
+  textarea,
+  input {
+    @include border();
+  }
+
+  .ant-col {
+    max-width: 100% !important;
+  }
+}
+
+.border {
+  margin: 0;
+  @include border();
+}
