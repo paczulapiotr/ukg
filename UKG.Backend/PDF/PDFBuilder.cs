@@ -1,19 +1,22 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using QuestPDF.Drawing.Exceptions;
-using QuestPDF.Elements;
 using UKG.Backend.Models;
 
 namespace UKG.Backend.PDF;
 
 public class PDFBuilder : IPDFBuilder
 {
+    private readonly static uint _fontSize = 11;
+    private readonly static uint _cellPadding = 3;
+    private readonly static uint _borderSize = 1;
+    private readonly static uint _borderGap = 1;
+
     public async Task<Stream> Create(UkgSummary ukgSummary)
     {
         return await Task.Run(() =>
         {
-            var document = Document.Create(DocumentBuilder());
+            var document = Document.Create(DocumentBuilder(ukgSummary));
 
             document.WithSettings(new()
             {
@@ -26,11 +29,8 @@ public class PDFBuilder : IPDFBuilder
             return stream;
         });
     }
-    public static Action<IDocumentContainer> DocumentBuilder()
+    public static Action<IDocumentContainer> DocumentBuilder(UkgSummary ukg)
     {
-        const int cellPadding = 5;
-        const int borderSize = 1;
-
         return container =>
         {
             container.Page(page =>
@@ -38,73 +38,81 @@ public class PDFBuilder : IPDFBuilder
                 page.Size(PageSizes.A4);
                 page.Margin(1, Unit.Centimetre);
                 page.PageColor(Colors.White);
-                page.DefaultTextStyle(x => x.FontSize(11));
-                page.Content().Table(table =>
+                page.DefaultTextStyle(x => x.FontSize(_fontSize));
+                page.Content().Table(tableContainer =>
                 {
-                    table.ColumnsDefinition(cd =>
+                    tableContainer.ColumnsDefinition(cd =>
                     {
-                        cd.RelativeColumn();
-                        cd.RelativeColumn();
-                        cd.RelativeColumn();
-                        cd.RelativeColumn();
-                        cd.RelativeColumn();
-                        cd.RelativeColumn();
-                        cd.RelativeColumn();
                         cd.RelativeColumn();
                     });
 
-                    table.Header(h =>
+                    tableContainer.Header(h =>
                     {
                         h.Cell()
-                        .ColumnSpan(8)
-                        .Element(e => e.Border(borderSize).Padding(cellPadding).AlignCenter())
+                        .ColumnSpan(1)
+                        .Element(e => e.Border(_borderSize).Padding(_cellPadding).AlignCenter())
                         .Text("Badanie UKG").SemiBold();
                     });
 
-                    table.Cell().ColumnSpan(4).Element(Cell).Text("Przeprowadzone przez: dr n.med. Wojciech Czapla");
-                    table.Cell().ColumnSpan(4).Element(Cell).Text($"Data badania: {DateTime.Now:dd-MM-yyyy HH:mm:ss}");
+                    tableContainer.Cell().Border(_borderSize).Padding(_borderGap).Table(table =>
+                    {
+                        table.ColumnsDefinition(cd =>
+                        {
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                            cd.RelativeColumn();
+                        });
 
-                    table.Cell().ColumnSpan(4).Element(Cell).Text("PESEL: 97042708474");
-                    table.Cell().ColumnSpan(4).Element(Cell).Text("Data urodzenia: 27-04-1997, wiek: 26");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"Przeprowadzone przez: {ukg.SubmitterName}");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"Data badania: {ukg.CreatedAt:dd-MM-yyyy HH:mm:ss}");
 
-                    Field(table, "Imię i nazwisko", "Piotr Paczuła");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"PESEL: {ukg.PESEL}");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"Data urodzenia: {ukg.Birthday:dd-MM-yyyy}, wiek: {CalculateAge(ukg.Birthday, ukg.CreatedAt)}");
 
-                    SmallField(table, 2, "Ao:", "36");
-                    SmallField(table, 6, "ACS:", "36");
+                        Field(table, "Imię i nazwisko", ukg.FullName);
 
-                    SmallField(table, 2, "LA:", "36");
-                    SmallField(table, 6, "RV:", "36");
+                        SmallField(table, 2, "Ao:", ukg.Ao);
+                        SmallField(table, 6, "ACS:", ukg.ACS);
 
-                    SmallField(table, 2, "LVs:", "36");
-                    SmallField(table, 6, "LVd:", "36");
+                        SmallField(table, 2, "LA:", ukg.LA);
+                        SmallField(table, 6, "RV:", ukg.RV);
 
-                    SmallField(table, 2, "IVSs:", "36");
-                    SmallField(table, 6, "IVSd:", "36");
+                        SmallField(table, 2, "LVs:", ukg.LVs);
+                        SmallField(table, 6, "LVd:", ukg.LVd);
 
-                    SmallField(table, 2, "LVPWs:", "36");
-                    SmallField(table, 6, "LVPWd:", "36");
+                        SmallField(table, 2, "IVSs:", ukg.IVSs);
+                        SmallField(table, 6, "IVSd:", ukg.IVSd);
 
-                    Field(table, "EF:", "ok: 60%");
-                    Field(table, "Kurczliwosc:", "lorem ipsum");
-                    Field(table, "Osierdzie:", "lorem ipsum");
-                    Field(table, "Zastawka mitralna:", "lorem ipsum");
-                    Field(table, "Badanie dopplerowskie:", "lorem ipsum");
-                    SmallField(table, 2, "Vmax:", "36");
-                    SmallField(table, 6, "Gmax:", "36");
+                        SmallField(table, 2, "LVPWs:", ukg.LVPWs);
+                        SmallField(table, 6, "LVPWd:", ukg.LVPWd);
 
-                    Field(table, "Zastawka aotralna:", "lorem ipsum");
-                    Field(table, "Badanie dopplerowskie:", "lorem ipsum");
-                    SmallField(table, 2, "Vmax:", "36");
-                    SmallField(table, 6, "Gmax:", "36");
+                        Field(table, "EF:", ukg.EF);
+                        Field(table, "Kurczliwość:", ukg.Kurczliwosc);
+                        Field(table, "Osierdzie:", ukg.Osierdzie);
+                        Field(table, "Zastawka mitralna:", ukg.ZastawkaMitralna);
+                        Field(table, "Badanie dopplerowskie:", ukg.DopplerMitralna);
+                        SmallField(table, 2, "Vmax:", ukg.VmaxMitralna);
+                        SmallField(table, 6, "Gmax:", ukg.GmaxMitralna);
 
-                    Field(table, "Zastawka trójdzielna:", "lorem ipsum");
-                    Field(table, "Badanie dopplerowskie:", "lorem ipsum");
-                    SmallField(table, 2, "Vmax:", "36");
-                    SmallField(table, 6, "Gmax:", "36");
+                        Field(table, "Zastawka aotralna:", ukg.ZastawkaAortalna);
+                        Field(table, "Badanie dopplerowskie:", ukg.DopplerAortalna);
+                        SmallField(table, 2, "Vmax:", ukg.VmaxAortalna);
+                        SmallField(table, 6, "Gmax:", ukg.GmaxAortalna);
 
-                    Field(table, "Zastawka pnia płucnego:", "lorem ipsum");
-                    Field(table, "Badanie dopplerowskie:", "lorem ipsum");
-                    Field(table, "Wnioski:", "Vestibulum convallis, enim vitae maximus congue, justo neque dapibus nulla, eu tempor nunc enim ut leo. In cursus felis egestas, cursus risus non, tempor mi. Praesent ut dapibus augue. Pellentesque vitae lectus nec leo mattis condimentum. \n\nSuspendisse vitae libero at libero ornare elementum. Morbi sit amet erat tincidunt, ultrices enim dictum, placerat orci. \n\n Aliquam volutpat placerat leo pharetra gravida. Proin eget faucibus ligula. Sed pulvinar mauris in molestie bibendum. Curabitur sed sem a erat ornare lacinia. Pellentesque porta, purus in varius porttitor, diam odio vulputate justo, nec congue metus tortor at nulla. Aliquam dictum nisl ut mi posuere dictum eu egestas odio.");
+                        Field(table, "Zastawka trójdzielna:", ukg.ZastawkaTrojdzielna);
+                        Field(table, "Badanie dopplerowskie:", ukg.DopplerTrojdzielna);
+                        SmallField(table, 2, "Vmax:", ukg.VmaxTrojdzielna);
+                        SmallField(table, 6, "Gmax:", ukg.GmaxTrojdzielna);
+
+                        Field(table, "Zastawka pnia płucnego:", ukg.ZastawkaPnia);
+                        Field(table, "Badanie dopplerowskie:", ukg.DopplerPnia);
+                        Field(table, "Wnioski:", ukg.Summary);
+                    });
                 });
 
                 page.Footer()
@@ -123,9 +131,10 @@ public class PDFBuilder : IPDFBuilder
     static IContainer Cell(IContainer container)
     {
         return container
-             .Border(1)
+             .Padding(_borderGap)
+             .Border(_borderSize)
              .Background(Colors.Grey.Lighten5)
-             .Padding(5)
+             .Padding(_cellPadding)
              .ShowOnce()
              .AlignLeft()
              .AlignMiddle();
@@ -135,15 +144,15 @@ public class PDFBuilder : IPDFBuilder
     {
         return container
             .Background(Colors.Grey.Lighten5)
-            .PaddingLeft(5)
+            .PaddingLeft(_cellPadding)
             .ShowOnce()
             .AlignLeft()
             .AlignMiddle();
     }
 
-    static void SmallField(TableDescriptor table, uint span, string cellOne, string cellTwo)
+    static void SmallField(TableDescriptor table, uint span, string? cellOne, string? cellTwo)
     {
-        table.Cell().ColumnSpan(span).Border(1).Table(t =>
+        table.Cell().ColumnSpan(span).Padding(_borderGap).Border(_borderSize).Table(t =>
         {
             t.ColumnsDefinition(cd =>
             {
@@ -156,9 +165,19 @@ public class PDFBuilder : IPDFBuilder
         });
     }
 
-    static void Field(TableDescriptor table, string cellOne, string cellTwo)
+    static void Field(TableDescriptor table, string? cellOne, string? cellTwo)
     {
         table.Cell().ColumnSpan(2).Element(Cell).Text(cellOne);
         table.Cell().ColumnSpan(6).Element(Cell).Text(cellTwo);
+    }
+
+    static int CalculateAge(DateOnly birthday, DateTime today)
+    {
+        int age = today.Year - birthday.Year;
+
+        if (today.DayOfYear < birthday.DayOfYear)
+            age--;
+
+        return age;
     }
 }
