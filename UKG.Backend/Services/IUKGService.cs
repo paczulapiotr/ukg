@@ -5,5 +5,5 @@ namespace UKG.Backend.Services;
 public interface IUkgService
 {
     Task Add(UkgSummary ukgSummary);
-    Task<IEnumerable<UkgSummary>> Find(int page = 1, PageSize = 10, string? name, string? pesel);
+    Task<IEnumerable<UkgSummary>> Find(string? name, string? pesel, int page = 1, int pageSize = 10);
 }

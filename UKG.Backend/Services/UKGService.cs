@@ -27,9 +27,9 @@ public class UkgService : IUkgService
         await _repository.Add(ukg);
     }
 
-    public async Task<IEnumerable<UkgSummary>> Find(int page = 1, PageSize = 10, string? name, string? pesel)
+    public async Task<IEnumerable<UkgSummary>> Find(string? name, string? pesel, int page = 1, int pageSize = 10)
     {
-        var submitterId = _authService.GetUserID();
+        var submitterId = await _authService.GetUserID();
         var query = _repository.Query();
 
         if (name is not null)
@@ -45,8 +45,8 @@ public class UkgService : IUkgService
         var ukgs = await query
             .Where(u => u.SubmitterID == submitterId)
             .OrderByDescending(u => u.FullName)
-            .Skip(Math.Min(0, (page - 1) * PageSize))
-            .Take(PageSize)
+            .Skip(Math.Min(0, (page - 1) * pageSize))
+            .Take(pageSize)
             .ToListAsync();
 
         return _mapper.Map<UkgSummary[]>(ukgs);
