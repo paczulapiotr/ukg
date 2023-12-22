@@ -5,6 +5,7 @@ import plPL from "antd/locale/pl_PL";
 import plCommon from "./i18n/pl/common.json";
 import plForm from "./i18n/pl/form.json";
 import dayjs from "dayjs";
+import { BrowserRouter } from "react-router-dom";
 
 dayjs.locale("pl");
 
@@ -28,9 +29,11 @@ i18n
 
 function App() {
   return (
-    <ConfigProvider locale={plPL}>
-      <Layout />
-    </ConfigProvider>
+    <BrowserRouter>
+      <ConfigProvider locale={plPL}>
+        <Layout />
+      </ConfigProvider>
+    </BrowserRouter>
   );
 }
 

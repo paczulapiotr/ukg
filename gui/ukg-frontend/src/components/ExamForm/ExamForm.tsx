@@ -22,6 +22,7 @@ type FocusedSection = "1" | "2" | "3" | "4" | "5" | "6";
 type Props = {};
 
 const IDName: keyof UkgExaminationForm = "ID";
+
 const ExamForm = ({}: Props) => {
   const [form] = Form.useForm<UkgExaminationForm>();
   const [focusedSection, setFocusedSection] = useState<FocusedSection>();
