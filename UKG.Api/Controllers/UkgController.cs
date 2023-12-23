@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace UKG.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]/[action]")]
 public class UkgController : ControllerBase
@@ -13,10 +15,11 @@ public class UkgController : ControllerBase
         _logger = logger;
     }
 
-
     [HttpGet]
     public ActionResult List([FromQuery] string? pesel, [FromQuery] string? name)
     {
+        var ctx = this.HttpContext;
+        var user = this.User;
         return Ok();
     }
 

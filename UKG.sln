@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Api", "UKG.Api\UKG.Api.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Api.Test", "UKG.Api.Test\UKG.Api.Test.csproj", "{33866FF0-0C49-4228-A33C-C11C9FBE272D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKG.Auth", "UKG.Auth\UKG.Auth.csproj", "{2E35C85A-18CD-405E-B6F8-E57748B10476}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{33866FF0-0C49-4228-A33C-C11C9FBE272D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33866FF0-0C49-4228-A33C-C11C9FBE272D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33866FF0-0C49-4228-A33C-C11C9FBE272D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E35C85A-18CD-405E-B6F8-E57748B10476}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E35C85A-18CD-405E-B6F8-E57748B10476}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E35C85A-18CD-405E-B6F8-E57748B10476}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E35C85A-18CD-405E-B6F8-E57748B10476}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
