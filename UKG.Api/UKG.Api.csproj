@@ -22,16 +22,19 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UKG.Storage\UKG.Storage.csproj" />
     <ProjectReference Include="..\UKG.Auth\UKG.Auth.csproj" />
+    <ProjectReference Include="..\UKG.Backend\UKG.Backend.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Auth\" />
+    <None Remove="Identity\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Auth\" />
+    <Folder Include="Identity\" />
   </ItemGroup>
 </Project>

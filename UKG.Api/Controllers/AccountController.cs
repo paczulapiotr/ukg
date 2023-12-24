@@ -1,6 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using UKG.Api.Models;
 using UKG.Auth.Models;
 
 namespace UKG.Api.Controllers;
@@ -93,38 +96,28 @@ public class AccountController : ControllerBase
     }
 
     // Other actions and methods...
-}
 
-// RegisterViewModel.cs
-public class RegisterModel
-{
-    [Required]
-    [Display(Name = "Username")]
-    public string UserName { get; set; }
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Info()
+    {
+        var info = await GetInfo();
+        return Ok(new { Name = info.name, Expiration = info.expiration });
+    }
 
-    [Required]
-    [DataType(DataType.Password)]
-    [Display(Name = "Password")]
-    public string? Password { get; set; }
+    private ValueTask<(string? name, DateTime? expiration)> GetInfo()
+    {
+        var ctx = HttpContext;
+        var expirationString = User.Claims
+                   .SingleOrDefault(c => c.Type == ClaimTypes.Expiration)?.Value;
 
-    [DataType(DataType.Password)]
-    [Display(Name = "Confirm Password")]
-    [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-    public string? ConfirmPassword { get; set; }
-}
+        DateTime? expiration = expirationString is null
+            ? null
+            : DateTime.Parse(expirationString);
 
-// LoginViewModel.cs
-public class LoginModel
-{
-    [Required]
-    [Display(Name = "Username")]
-    public string? UserName { get; set; }
+        var name = User.Claims
+               .SingleOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
 
-    [Required]
-    [DataType(DataType.Password)]
-    [Display(Name = "Password")]
-    public string? Password { get; set; }
-
-    [Display(Name = "Remember me")]
-    public bool RememberMe { get; set; }
+        return ValueTask.FromResult((name, expiration));
+    }
 }
