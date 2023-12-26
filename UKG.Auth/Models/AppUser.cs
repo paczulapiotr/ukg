@@ -2,7 +2,7 @@
 
 namespace UKG.Auth.Models
 {
-	public class AppUser : IdentityUser
+	public class AppUser : IdentityUser<int>
 	{
 		public string? FullName { get; set; }
 	}

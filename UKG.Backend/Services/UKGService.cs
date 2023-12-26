@@ -18,25 +18,27 @@ public class UkgService : IUkgService
         _authService = authService;
     }
 
-    public async Task Add(UkgSummary ukgSummary)
+    public async Task Add(UkgSummary ukgSummary, CancellationToken cancellationToken = default)
     {
-        var submitterId = await _authService.GetUserID();
+        var submitterId = _authService.GetID();
+
         var ukg = _mapper.Map<UkgSummary, Storage.Models.UkgSummary>(ukgSummary,
             opts => opts.AfterMap((src, dest) => { dest.SubmitterID = submitterId; }));
 
-        await _repository.Add(ukg);
+        await _repository.Add(ukg, cancellationToken);
     }
 
-    public async Task<UkgSummary> Find(int id)
+    public async Task<UkgSummary> Find(int id, CancellationToken cancellationToken = default)
     {
-        var submitterId = await _authService.GetUserID();
+        var submitterId = _authService.GetID();
+        var ukg = await _repository.FindOneByID(id, submitterId, cancellationToken);
 
-        return _mapper.Map<UkgSummary>(await _repository.FindOneByID(id));
+        return _mapper.Map<UkgSummary>(ukg);
     }
 
-    public async Task<IEnumerable<UkgSimple>> List(string? name, string? pesel, int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<UkgSimple>> List(string? name, string? pesel, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        var submitterId = await _authService.GetUserID();
+        var submitterId = _authService.GetID();
         var query = _repository.Query();
 
         if (name is not null)
@@ -54,7 +56,7 @@ public class UkgService : IUkgService
             .OrderByDescending(u => u.FullName)
             .Skip(Math.Min(0, (page - 1) * pageSize))
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return _mapper.Map<UkgSimple[]>(ukgs);
     }

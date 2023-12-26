@@ -6,11 +6,11 @@ using UKG.Auth.Models;
 
 namespace UKG.Api.Identity;
 
-public class AppUserClaimsPricipalFactory : UserClaimsPrincipalFactory<AppUser, IdentityRole>
+public class AppUserClaimsPricipalFactory : UserClaimsPrincipalFactory<AppUser, IdentityRole<int>>
 {
     public AppUserClaimsPricipalFactory(
         UserManager<AppUser> userManager,
-        RoleManager<IdentityRole> roleManager,
+        RoleManager<IdentityRole<int>> roleManager,
         IOptions<IdentityOptions> optionsAccessor)
         : base(userManager, roleManager, optionsAccessor)
     {

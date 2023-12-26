@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UKG.Api.Identity;
 using UKG.Auth.Context;
@@ -10,6 +11,7 @@ using UKG.Storage.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<ClaimsPrincipal>(sp => sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User!);
 builder.Services.AddTransient<IUkgService, UkgService>();
 builder.Services.AddTransient<IUkgRepository, UkgSqlRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
@@ -37,7 +39,7 @@ builder.Services.AddDbContext<AuthDbContext>(opts
     => opts.UseSqlite(dbConnectionString));
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AppUserClaimsPricipalFactory>();
-builder.Services.AddIdentity<AppUser, IdentityRole>(c =>
+builder.Services.AddIdentity<AppUser, IdentityRole<int>>(c =>
 {
     c.SignIn.RequireConfirmedEmail = false;
     c.SignIn.RequireConfirmedPhoneNumber = false;

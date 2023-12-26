@@ -18,9 +18,11 @@ public class UkgSqlRepository : IUkgRepository
         await _ctx.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<UkgSummary?> FindOneByID(int id, CancellationToken cancellationToken = default)
+    public Task<UkgSummary?> FindOneByID(int id, int submitterId, CancellationToken cancellationToken = default)
     {
-        return _ctx.UKGSummaries.AsNoTracking().FirstOrDefaultAsync(x => x.ID == id, cancellationToken);
+        return _ctx.UKGSummaries.AsNoTracking()
+            .Where(x => x.SubmitterID == submitterId)
+            .FirstOrDefaultAsync(x => x.ID == id, cancellationToken);
     }
 
     public IQueryable<UkgSummary> Query()

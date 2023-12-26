@@ -1,10 +1,9 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UKG.Api.Models;
 using UKG.Auth.Models;
+using UKG.Backend.Services;
 
 namespace UKG.Api.Controllers;
 
@@ -15,12 +14,14 @@ public class AccountController : ControllerBase
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly ILogger<AccountController> _logger;
+    private readonly IAuthService _authService;
 
-    public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILogger<AccountController> logger)
+    public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILogger<AccountController> logger, IAuthService authService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
+        _authService = authService;
     }
 
     [HttpPost("register")]
@@ -99,25 +100,9 @@ public class AccountController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Info()
+    public IActionResult Info()
     {
-        var info = await GetInfo();
-        return Ok(new { Name = info.name, Expiration = info.expiration });
-    }
-
-    private ValueTask<(string? name, DateTime? expiration)> GetInfo()
-    {
-        var ctx = HttpContext;
-        var expirationString = User.Claims
-                   .SingleOrDefault(c => c.Type == ClaimTypes.Expiration)?.Value;
-
-        DateTime? expiration = expirationString is null
-            ? null
-            : DateTime.Parse(expirationString);
-
-        var name = User.Claims
-               .SingleOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
-
-        return ValueTask.FromResult((name, expiration));
+        var info = _authService.GetUser(); ;
+        return Ok(new { Name = info.FullName, Expiration = info.AuthExpiration });
     }
 }

@@ -9,7 +9,7 @@ namespace UKG.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("api/ukg")]
 public class UkgController : ControllerBase
 {
     private readonly ILogger<UkgController> _logger;
@@ -62,7 +62,7 @@ public class UkgController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
+    [HttpGet("pdf/{id}")]
     public ActionResult Pdf([FromRoute] string id)
     {
         return Ok();
