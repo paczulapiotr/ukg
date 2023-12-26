@@ -8,9 +8,10 @@ const body = {
   password: "haslo123",
   rememberMe: true,
 };
+const apiUrl = "https://localhost:7164";
 
 const login = () =>
-  fetch("https://localhost:7164/api/account/login", {
+  fetch(`${apiUrl}/api/account/login`, {
     body: JSON.stringify(body),
     method: "POST",
     credentials: "include",
@@ -20,19 +21,19 @@ const login = () =>
   });
 
 const logout = () =>
-  fetch("https://localhost:7164/api/account/logout", {
+  fetch(`${apiUrl}/api/account/logout`, {
     method: "POST",
     credentials: "include",
   });
 
 const info = () =>
-  fetch("https://localhost:7164/api/account", {
+  fetch(`${apiUrl}/api/account`, {
     method: "GET",
     credentials: "include",
   });
 
 const testAuth = () =>
-  fetch("https://localhost:7164/api/ukg/pdf/asd", {
+  fetch(`${apiUrl}//api/ukg/pdf/asd`, {
     credentials: "include",
   });
 
