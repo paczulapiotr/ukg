@@ -2,34 +2,40 @@ import { Routes, Route } from "react-router-dom";
 import { New } from "../pages/Exams/New";
 import { Search } from "../pages/Exams/Search";
 import { Button } from "antd";
-
+let accessToken = "";
+let refreshToken = "";
 const body = {
-  userName: "wczapla",
-  password: "haslo123",
-  rememberMe: true,
+  username: "admin",
+  password: "admin123",
 };
 const apiUrl = "https://localhost:7164";
 
 const login = () =>
-  fetch(`${apiUrl}/api/account/login`, {
+  fetch(`${apiUrl}/api/auth/login`, {
     body: JSON.stringify(body),
     method: "POST",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-  });
+  })
+    .then((resp) => resp.json())
+    .then((data: { token: string; refreshToken: string }) => {
+      accessToken = data.token;
+      refreshToken = data.refreshToken;
+    });
 
 const logout = () =>
   fetch(`${apiUrl}/api/account/logout`, {
     method: "POST",
-    credentials: "include",
   });
 
 const info = () =>
-  fetch(`${apiUrl}/api/account`, {
+  fetch(`${apiUrl}/api/auth/info`, {
     method: "GET",
-    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 
 const testAuth = () =>

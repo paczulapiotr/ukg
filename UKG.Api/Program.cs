@@ -1,12 +1,14 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using UKG.Api.Identity;
 using UKG.Auth.Context;
-using UKG.Auth.Models;
 using UKG.Backend.Mapper;
 using UKG.Backend.Services;
 using UKG.Storage.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using UKG.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(opts =>
 {
-    opts.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:1420")
+    opts.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:1320")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
@@ -38,7 +40,7 @@ builder.Services.AddDbContext<UkgDbContext>(opts
 builder.Services.AddDbContext<AuthDbContext>(opts
     => opts.UseSqlite(dbConnectionString));
 
-builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AppUserClaimsPricipalFactory>();
+//builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AppUserClaimsPricipalFactory>();
 builder.Services.AddIdentity<AppUser, IdentityRole<int>>(c =>
 {
     c.SignIn.RequireConfirmedEmail = false;
@@ -52,6 +54,28 @@ builder.Services.AddIdentity<AppUser, IdentityRole<int>>(c =>
     .AddEntityFrameworkStores<AuthDbContext>();
 
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opts =>
+{
+    opts.SaveToken = true;
+    opts.RequireHttpsMetadata = false;
+    opts.TokenValidationParameters = new()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero,
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"] ?? "")),
+    };
+});
 builder.Services.AddAuthorization();
 
 // Build
@@ -60,6 +84,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();
 

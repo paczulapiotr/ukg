@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
-using UKG.Auth.Models;
+using UKG.Auth;
 
 namespace UKG.Api.Identity;
 
