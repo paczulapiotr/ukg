@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -41,8 +43,9 @@ public class AuthenticateController : ControllerBase
             var authClaims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("username", user.UserName),
-                new Claim(JwtRegisteredClaimNames.Name, user.FullName),
+                new Claim("username", user.UserName ?? ""),
+                new Claim(ClaimTypes.Name, user.UserName ?? ""),
+                new Claim(JwtRegisteredClaimNames.Name, user.FullName ?? ""),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
@@ -57,15 +60,16 @@ public class AuthenticateController : ControllerBase
             _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
 
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenValidityInDays);
 
             await _userManager.UpdateAsync(user);
 
-            return Ok(new 
+            return Ok(new AuthorizedResponse
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
-                Expiration = token.ValidTo
+                TokenExpiration = token.ValidTo,
+                RefreshTokenExpiration = user.RefreshTokenExpiryTime,
             });
         }
         return Unauthorized();
@@ -92,6 +96,7 @@ public class AuthenticateController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
     {
@@ -100,8 +105,8 @@ public class AuthenticateController : ControllerBase
             return BadRequest("Invalid client request");
         }
 
-        string? accessToken = tokenModel.AccessToken;
-        string? refreshToken = tokenModel.RefreshToken;
+        var accessToken = AccessToken;
+        var refreshToken = tokenModel.RefreshToken;
 
         var principal = GetPrincipalFromExpiredToken(accessToken);
         if (principal == null)
@@ -113,7 +118,7 @@ public class AuthenticateController : ControllerBase
 
         var user = await _userManager.FindByNameAsync(username);
 
-        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
         {
             return BadRequest("Invalid access token or refresh token");
         }
@@ -124,10 +129,12 @@ public class AuthenticateController : ControllerBase
         user.RefreshToken = newRefreshToken;
         await _userManager.UpdateAsync(user);
 
-        return Ok(new
+        return Ok(new AuthorizedResponse
         {
-            accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-            refreshToken = newRefreshToken
+            Token = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+            RefreshToken = newRefreshToken,
+            TokenExpiration = newAccessToken.ValidTo,
+            RefreshTokenExpiration = user.RefreshTokenExpiryTime,
         });
     }
 
@@ -164,13 +171,15 @@ public class AuthenticateController : ControllerBase
         _ = int.TryParse(_configuration["JWT:TokenValidityInMinutes"], out int tokenValidityInMinutes);
 
         var token = new JwtSecurityToken(
-            expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
+            expires: DateTime.UtcNow.AddMinutes(tokenValidityInMinutes),
             claims: authClaims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );
 
         return token;
     }
+
+    private string AccessToken => Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
 
     private static string GenerateRefreshToken()
     {

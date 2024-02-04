@@ -43,7 +43,7 @@ public class UkgController : ControllerBase
     {
         await _ukgService.Add(_mapper.Map<UkgSummary>(model, opts =>
         {
-            opts.AfterMap((src, dest) => dest.CreatedAt = DateTime.Now);
+            opts.AfterMap((src, dest) => dest.CreatedAt = DateTime.UtcNow);
         }));
 
         return Ok();

@@ -11,6 +11,7 @@ dayjs.locale("pl");
 
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import AuthProvider from "./auth/AuthProvider/AuthProvider";
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
@@ -29,11 +30,13 @@ i18n
 
 function App() {
   return (
-    <BrowserRouter>
-      <ConfigProvider locale={plPL}>
-        <Layout />
-      </ConfigProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <ConfigProvider locale={plPL}>
+          <Layout />
+        </ConfigProvider>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
