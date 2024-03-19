@@ -138,11 +138,11 @@ public class AuthenticateController : ControllerBase
         });
     }
 
-    [Authorize]
     [HttpPost]
     [Route("logout")]
     public async Task<IActionResult> Logout()
     {
+        var ctx = this.HttpContext;
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
         if (user == null) return BadRequest("Invalid user name");
 
