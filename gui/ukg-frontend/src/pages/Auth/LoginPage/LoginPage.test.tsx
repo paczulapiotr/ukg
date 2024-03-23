@@ -12,7 +12,6 @@ useAuthMock.mockReturnValue({
     isAuthorized: false,
   },
   logout: vi.fn(),
-  refreshToken: vi.fn(),
 });
 
 describe("LoginPage", () => {

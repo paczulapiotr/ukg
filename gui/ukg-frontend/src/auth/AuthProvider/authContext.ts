@@ -12,6 +12,7 @@ export type AuthorizedUser = {
 };
 
 export type Authorization = {
+  isLoading: boolean;
   isAuthorized: boolean;
   user?: AuthorizedUser;
   accessToken?: Token;
@@ -24,7 +25,7 @@ export type AuthContext = {
 };
 
 export const defaultValue: AuthContext = {
-  ctx: { isAuthorized: false },
+  ctx: { isAuthorized: false, isLoading: true },
   setCtx: () => {},
 };
 

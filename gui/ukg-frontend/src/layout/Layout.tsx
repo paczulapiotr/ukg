@@ -5,10 +5,16 @@ import UnauthorizedLayout from "./UnauthorizedLayout/UnauthorizedLayout";
 
 const MainLayout: React.FC = () => {
   const {
-    auth: { isAuthorized },
+    auth: { isAuthorized, isLoading },
   } = useAuth();
 
-  return isAuthorized ? <AuthorizedLayout /> : <UnauthorizedLayout />;
+  return isLoading ? (
+    <p>{"Ładowanie..."}</p>
+  ) : isAuthorized ? (
+    <AuthorizedLayout />
+  ) : (
+    <UnauthorizedLayout />
+  );
 };
 
 export default MainLayout;
