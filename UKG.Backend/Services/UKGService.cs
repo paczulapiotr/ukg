@@ -36,10 +36,10 @@ public class UkgService : IUkgService
         return _mapper.Map<UkgSummary>(ukg);
     }
 
-    public async Task<IEnumerable<UkgSimple>> List(string? name, string? pesel, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<TableData<UkgSimple>> List(string? name, string? pesel, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
         var submitterId = _authService.GetID();
-        var query = _repository.Query();
+        var query = _repository.Query().Where(u => u.SubmitterID == submitterId);
 
         if (name is not null)
         {
@@ -48,17 +48,19 @@ public class UkgService : IUkgService
 
         if (pesel is not null)
         {
-            query = query.Where(x => x.PESEL!.Contains(pesel, StringComparison.InvariantCultureIgnoreCase));
+            query = query.Where(x => x.Pesel!.Contains(pesel, StringComparison.InvariantCultureIgnoreCase));
         }
+
+        var total = await query.CountAsync();
 
         var ukgs = await query
             .Where(u => u.SubmitterID == submitterId)
             .OrderByDescending(u => u.FullName)
-            .Skip(Math.Min(0, (page - 1) * pageSize))
+            .Skip(Math.Max(0, (page - 1) * pageSize))
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return _mapper.Map<UkgSimple[]>(ukgs);
+        return new TableData<UkgSimple>(total, _mapper.Map<UkgSimple[]>(ukgs));
     }
 
 }

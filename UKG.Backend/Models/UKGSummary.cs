@@ -7,10 +7,10 @@ public record UkgSummary
     public string? SubmitterName { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public required string PESEL { get; set; }
+    public required string Pesel { get; set; }
     public required string FirstName { get; set; }
-    public required string SecondName { get; set; }
-    public string FullName => $"{FirstName} {SecondName}";
+    public required string LastName { get; set; }
+    public string FullName => $"{FirstName} {LastName}";
     public DateOnly Birthday { get; set; }
     public string? Ao { get; set; }
     public string? ACS { get; set; }

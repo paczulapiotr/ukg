@@ -16,7 +16,7 @@ public class AuthService : IAuthService
     public int GetID()
     {
         var idString = _claimsPrincipal.Claims
-            .SingleOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+            .SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
         if(int.TryParse(idString, out int id))
         {

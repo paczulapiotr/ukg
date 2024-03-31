@@ -32,8 +32,9 @@ export const useAuth = (): UseAuthResult => {
   };
 
   const logout = async () => {
-    const { status } = await instance.post("auth/logout");
-    if (status >= 200 && status < 300) {
+    try {
+      await instance.post("auth/logout");
+    } finally {
       setCtx(() => ({ isAuthorized: false, isLoading: false }));
     }
   };

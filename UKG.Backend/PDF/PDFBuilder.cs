@@ -71,7 +71,7 @@ public class PDFBuilder : IPDFBuilder
                         table.Cell().ColumnSpan(4).Element(Cell).Text($"Przeprowadzone przez: {ukg.SubmitterName}");
                         table.Cell().ColumnSpan(4).Element(Cell).Text($"Data badania: {ukg.CreatedAt:dd-MM-yyyy HH:mm:ss}");
 
-                        table.Cell().ColumnSpan(4).Element(Cell).Text($"PESEL: {ukg.PESEL}");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"PESEL: {ukg.Pesel}");
                         table.Cell().ColumnSpan(4).Element(Cell).Text($"Data urodzenia: {ukg.Birthday:dd-MM-yyyy}, wiek: {CalculateAge(ukg.Birthday, ukg.CreatedAt)}");
 
                         Field(table, "Imię i nazwisko", ukg.FullName);

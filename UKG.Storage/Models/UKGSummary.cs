@@ -6,9 +6,11 @@ public record UkgSummary
 {
     public int ID { get; set; }
     public int SubmitterID { get; set; }
-    public DateTime CreatedAt { get; set; }
+    [Column(TypeName = "datetime")]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
-    public required string PESEL { get; set; }
+    public required string Pesel { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
 

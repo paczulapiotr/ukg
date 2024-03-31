@@ -1,10 +1,10 @@
 import { Dayjs } from "dayjs";
 export type UkgExamination = {
   ID?: string;
-  PESEL: string;
+  Pesel: string;
   FirstName: string;
-  SecondName: string;
-  Birthday: string;
+  LastName: string;
+  Birthday?: string;
   Ao?: string | null;
   ACS?: string | null;
   LA?: string | null;

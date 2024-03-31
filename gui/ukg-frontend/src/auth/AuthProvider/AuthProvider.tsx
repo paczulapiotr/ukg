@@ -32,7 +32,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         const currentTime = new Date().getTime() / 1000;
         const expirationTime = new Date(expiration).getTime() / 1000;
         if (expirationTime - currentTime < 50) {
-          debugger;
           refreshToken(ctx.refreshToken?.token).catch((err) =>
             console.error("Error while refreshing token", err)
           );

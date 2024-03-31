@@ -13,6 +13,7 @@ dayjs.locale("pl");
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import AuthProvider from "./auth/AuthProvider/AuthProvider";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
@@ -29,14 +30,18 @@ i18n
     },
   });
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <ConfigProvider locale={plPL}>
-          <Layout />
-        </ConfigProvider>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <ConfigProvider locale={plPL}>
+            <Layout />
+          </ConfigProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     </AuthProvider>
   );
 }

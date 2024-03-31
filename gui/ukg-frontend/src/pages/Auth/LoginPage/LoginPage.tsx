@@ -54,9 +54,7 @@ const LoginPage = () => {
           </Form.Item>
         </Form>
       </Content>
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©2024 Created by Ant UED
-      </Footer>
+      <Footer style={{ textAlign: "center" }}>Ant Design ©2024</Footer>
     </Layout>
   );
 };

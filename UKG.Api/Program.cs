@@ -9,6 +9,7 @@ using UKG.Storage.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UKG.Auth;
+using UKG.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,10 @@ builder.Services.AddTransient<ClaimsPrincipal>(sp => sp.GetRequiredService<IHttp
 builder.Services.AddTransient<IUkgService, UkgService>();
 builder.Services.AddTransient<IUkgRepository, UkgSqlRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddAutoMapper(c => c.AddProfile(new MapperConfiguration()));
+builder.Services.AddAutoMapper(c => {
+    c.AddProfile(new MapperConfiguration());
+    c.AddProfile(new ApiMapperConfiguration());
+});
 
 // Add controllers
 builder.Services.AddControllers();

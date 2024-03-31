@@ -41,10 +41,12 @@ public class UkgController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> Add([FromBody] AddUkgModel model)
     {
-        await _ukgService.Add(_mapper.Map<UkgSummary>(model, opts =>
+        var ukg = _mapper.Map<UkgSummary>(model, opts =>
         {
             opts.AfterMap((src, dest) => dest.CreatedAt = DateTime.UtcNow);
-        }));
+        });
+
+        await _ukgService.Add(ukg);
 
         return Ok();
     }
