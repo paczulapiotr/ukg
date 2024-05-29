@@ -26,7 +26,7 @@ public class AuthService : IAuthService
         throw new UnauthorizedAccessException();
     }
 
-    public SimpleUser GetUser()
+    public UserSimple GetUser()
     {
         var expirationString = _claimsPrincipal.Claims
             .SingleOrDefault(c => c.Type == ClaimTypes.Expiration)?.Value;

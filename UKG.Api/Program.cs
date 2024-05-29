@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<ClaimsPrincipal>(sp => sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User!);
 builder.Services.AddTransient<IUkgService, UkgService>();
 builder.Services.AddTransient<IUkgRepository, UkgSqlRepository>();
+builder.Services.AddTransient<IPatientRepository, PatientSqlRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddAutoMapper(c => {
     c.AddProfile(new MapperConfiguration());

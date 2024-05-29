@@ -10,13 +10,8 @@ public record UkgSummary
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedAt { get; set; }
-    public required string Pesel { get; set; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public required string FullName { get; set; }
-    public DateOnly Birthday { get; set; }
+    public int PatientID { get; set; }
+    public required Patient Patient { get; set; }
     public string? Ao { get; set; }
     public string? ACS { get; set; }
     public string? LA { get; set; }

@@ -23,10 +23,12 @@ public class UkgController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet]
-    public async Task<ActionResult> List([FromQuery] string? pesel, [FromQuery] string? name, int page = 1, int pageSize = 10)
+
+
+    [HttpGet("list/{patientId}")]
+    public async Task<ActionResult> List([FromRoute] int patientId, int page = 1, int pageSize = 10)
     {
-        var result = await _ukgService.List(name, pesel, page, pageSize);
+        var result = await _ukgService.ListUkgs(patientId, page, pageSize);
 
         return Ok(result);
     }
@@ -46,9 +48,9 @@ public class UkgController : ControllerBase
             opts.AfterMap((src, dest) => dest.CreatedAt = DateTime.UtcNow);
         });
 
-        await _ukgService.Add(ukg);
+        var ukgId = await _ukgService.Add(ukg);
 
-        return Ok();
+        return Ok(ukgId);
     }
 
     [HttpPost("{id}")]
@@ -58,8 +60,10 @@ public class UkgController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult Delete([FromRoute] string id)
+    public async Task<ActionResult> Delete([FromRoute] int id)
     {
+        await _ukgService.Delete(id);
+
         return Ok();
     }
 

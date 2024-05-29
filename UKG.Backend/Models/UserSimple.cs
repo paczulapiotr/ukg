@@ -1,6 +1,6 @@
 ﻿namespace UKG.Backend.Models;
 
-public record SimpleUser
+public record UserSimple
 {
 	public int? ID { get; set; }
 	public string? FullName { get; set; }

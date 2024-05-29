@@ -2,10 +2,7 @@ namespace UKG.Api.Models;
 
 public record AddUkgModel
 {
-    public required string Pesel { get; set; }
-    public required string FirstName { get; set; }
-    public required string LastName { get; set; }
-    public DateOnly Birthday { get; set; }
+    public required string PatientID { get; set; }
     public string? Ao { get; set; }
     public string? ACS { get; set; }
     public string? LA { get; set; }

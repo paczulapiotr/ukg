@@ -8,8 +8,6 @@ internal class UkgSummaryEntityConfiguration : IEntityTypeConfiguration<UkgSumma
 {
     public void Configure(EntityTypeBuilder<UkgSummary> builder)
     {
-        builder
-            .Property(x => x.FullName)
-            .HasComputedColumnSql($"{nameof(UkgSummary.FirstName)} || ' ' || {nameof(UkgSummary.LastName)}");
+        builder.HasKey(x => x.ID);
     }
 }
