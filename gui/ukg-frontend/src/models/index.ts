@@ -35,6 +35,12 @@ export type UkgExamination = {
   Summary?: string | null;
 };
 
-export type UkgExaminationForm = UkgExamination & {
-  BirthdayDate?: Dayjs;
+export type PatientForm = {
+  ID?: string;
+  Pesel: string;
+  FirstName: string;
+  LastName: string;
+  BirthdayDate: Dayjs;
 };
+
+export type UkgExaminationForm = UkgExamination & PatientForm;

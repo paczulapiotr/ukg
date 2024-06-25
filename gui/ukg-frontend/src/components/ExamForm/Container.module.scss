@@ -1,14 +1,30 @@
+@import "/src/styles/variables.scss";
+@import "/src/styles/colors.scss";
+
+$grid-padding: 0.3rem;
 .grid {
+  border-radius: calc($border-radius + $grid-padding);
   display: grid;
   grid-template-columns: 200px 1fr;
-  gap: 0.2rem;
-  /* Optional: Style for better visualization */
+  gap: $grid-padding;
   border: 1px solid #333;
-  padding: 0.2rem;
+  padding: $grid-padding;
   margin-bottom: 0.5rem;
   transition: background-color 0.5s ease;
 }
 
 .focused {
-  background-color: rgba(64, 150, 255, 0.5);
+  background-color: $secondary-blue;
+  border-color: $primary-blue;
+
+  :global(.focusable) {
+    border-color: $primary-blue;
+
+    :global(.ant-select-selector),
+    :global(.ant-picker),
+    textarea,
+    input {
+      border-color: $primary-blue;
+    }
+  }
 }

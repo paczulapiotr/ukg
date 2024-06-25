@@ -5,7 +5,7 @@ import styles from "./Container.module.scss";
 type Props<T> = {
   name: T;
   focusedSection?: T;
-  setFocusedSection: (section: T) => void;
+  setFocusedSection?: (section: T) => void;
 };
 
 const Container = <TFocusedName,>({
@@ -14,11 +14,12 @@ const Container = <TFocusedName,>({
   focusedSection,
   setFocusedSection,
 }: PropsWithChildren<Props<TFocusedName>>) => {
+  const isFocused = focusedSection == name;
   return (
     <div
-      onFocusCapture={() => setFocusedSection(name)}
+      onFocusCapture={() => setFocusedSection?.(name)}
       className={classnames(styles.grid, {
-        [styles.focused]: focusedSection == name,
+        [styles.focused]: isFocused,
       })}
     >
       {children}

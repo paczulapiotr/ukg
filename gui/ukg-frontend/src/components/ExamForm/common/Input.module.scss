@@ -4,11 +4,14 @@
   @include border();
   padding: 0.2rem;
   height: 100%;
+  line-height: 24px;
+  max-height: max-content;
 }
 
 .input {
-  background-color: white;
   margin: 0;
+
+  :global(.ant-select-selector),
   textarea,
   input {
     @include border();

@@ -1,5 +1,10 @@
 {
   "FirstName": "Imię",
+  "FirstName_error": "Imię jest wymagane",
   "LastName": "Nazwisko",
-  "PESEL": "PESEL"
+  "LastName_error": "Nazwisko jest wymagane",
+  "Pesel": "PESEL",
+  "Pesel_error": "PESEL jest wymagany",
+  "BirthdayDate": "Data urodzenia",
+  "BirthdayDate_error": "Data urodzenia jest wymagana"
 }

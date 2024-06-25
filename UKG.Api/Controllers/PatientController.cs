@@ -41,6 +41,16 @@ public class PatientController : ControllerBase
         return Ok(patientId);
     }
 
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Edit([FromRoute] string id, [FromBody] UpdatePatientModel model, CancellationToken cancellationToken = default)
+    {
+        var patient = _mapper.Map<PatientSimple>(model);
+
+        var patientId = await _ukgService.AddPatient(patient, cancellationToken);
+
+        return Ok(patientId);
+    }
+
     [HttpDelete]
     public async Task<ActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken = default)
     {

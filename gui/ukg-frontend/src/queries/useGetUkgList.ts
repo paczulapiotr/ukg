@@ -16,16 +16,17 @@ export type UkgListItem = {
   Birthday: Date;
 };
 
-const useGetUkgList = (page: number, pageSize: number, pesel?: string) => {
+const useGetUkgList = (page: number, pageSize: number, patientId?: string) => {
   return useQuery({
     queryFn: async () =>
       (
         await instance.get<TableData<UkgListItem>>(
-          `/ukg?pageSize=${pageSize}&page=${page}&pesel=${pesel ?? ""}`
+          `/ukg/list/${patientId}?pageSize=${pageSize}&page=${page}`
         )
       ).data,
     initialData: { data: [], total: 0 },
-    queryKey: [queryKeys.ukgList, page, pageSize, pesel],
+    enabled: patientId != null,
+    queryKey: [queryKeys.ukgList, page, pageSize, patientId],
   });
 };
 

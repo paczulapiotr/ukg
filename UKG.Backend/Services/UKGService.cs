@@ -87,7 +87,7 @@ public class UkgService : IUkgService
     public async Task<int> AddPatient(PatientSimple dto, CancellationToken cancellationToken = default)
     {
         // todo: validate dto
-        var isUnique = !await _patientRepository.Query().AnyAsync(x => x.Pesel == dto.Pesel, cancellationToken: cancellationToken);
+        var isUnique = !await _patientRepository.Query().AnyAsync(x => x.Pesel == dto.Pesel);
         if (!isUnique)
         {
             throw new ArgumentException("Pesel must be unique.");
@@ -117,5 +117,10 @@ public class UkgService : IUkgService
     public async Task DeletePatient(int id, CancellationToken cancellationToken)
     {
         await _patientRepository.Delete(id, cancellationToken);
+    }
+
+    public Task UpdatePatient(string id, UpdatePatientSimple patient, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

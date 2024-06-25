@@ -1,10 +1,11 @@
+import useGetPatientList, { UkgPatientItem } from "@/queries/useGetPatientList";
 import useGetUkgList, { UkgListItem } from "@/queries/useGetUkgList";
 import { Table } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-const columns: ColumnsType<UkgListItem> = [
+const columns: ColumnsType<UkgPatientItem> = [
   {
     title: "FullName",
     dataIndex: "fullName",
@@ -32,7 +33,7 @@ const Search = () => {
   const {
     data: { data, total },
     isFetching,
-  } = useGetUkgList(page, pageSize);
+  } = useGetPatientList(page, pageSize);
 
   return (
     <Table

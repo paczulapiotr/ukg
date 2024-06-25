@@ -9,6 +9,7 @@ public interface IUkgService
     Task<UkgSummary> Find(int id, CancellationToken cancellationToken = default);
     Task<TableData<PatientSimple>> ListPatients(string pesel, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default);
     Task<int> AddPatient(PatientSimple patient, CancellationToken cancellationToken = default);
+    Task UpdatePatient(string id, UpdatePatientSimple patient, CancellationToken cancellationToken = default);
     Task Delete(int id, CancellationToken cancellationToken = default);
     Task DeletePatient(int id, CancellationToken cancellationToken);
 }

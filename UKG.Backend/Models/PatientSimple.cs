@@ -8,4 +8,3 @@ public record PatientSimple
     public required string Pesel { get; set; }
     public required DateOnly Birthday { get; set; }
 }
-

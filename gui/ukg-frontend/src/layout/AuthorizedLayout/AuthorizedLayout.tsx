@@ -4,7 +4,8 @@ import {
   FileTextOutlined,
   FileAddOutlined,
   SearchOutlined,
-  ExportOutlined,
+  SettingOutlined,
+  PlusOutlined,
   MoreOutlined,
   LogoutOutlined,
   UsergroupAddOutlined,
@@ -42,17 +43,38 @@ const useMenuItems = (): MenuItem[] => {
   const { logout } = useAuth();
   return useMemo<MenuItem[]>(
     () => [
+      getItem("Pacjenci", "patient", <UserOutlined />, [
+        getItem(
+          "Dodaj pacjenta",
+          "patient_add",
+          <PlusOutlined />,
+          undefined,
+          () => navigate("/patient/upsert")
+        ),
+        getItem(
+          "Wyszukaj",
+          "patient_search",
+          <SearchOutlined />,
+          undefined,
+          () => navigate("/patient/search")
+        ),
+      ]),
       getItem("Badania", "ukg", <FileTextOutlined />, [
-        getItem("Nowe badanie", "ukg_new", <FileAddOutlined />, undefined, () =>
-          navigate("ukg/new")
+        getItem("Nowe badanie", "ukg_add", <FileAddOutlined />, undefined, () =>
+          navigate("/ukg/add")
         ),
         getItem("Wyszukaj", "ukg_search", <SearchOutlined />, undefined, () =>
-          navigate("ukg")
+          navigate("/ukg")
         ),
-        getItem("Eksportuj", "ukg_export", <ExportOutlined />),
       ]),
-      getItem("Uzytkownik", "user", <UserOutlined />, [
-        getItem("Ustawienia", "user_settings", <MoreOutlined />),
+      getItem("Profil", "user", <SettingOutlined />, [
+        getItem(
+          "Ustawienia",
+          "user_settings",
+          <MoreOutlined />,
+          undefined,
+          () => navigate("settings")
+        ),
         getItem(
           "Wyloguj",
           "user_logout",

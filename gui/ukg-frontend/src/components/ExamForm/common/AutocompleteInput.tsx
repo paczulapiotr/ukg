@@ -1,15 +1,22 @@
-import { Form, Input, Typography } from "antd";
+import { AutoComplete, Form, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { UkgExaminationForm } from "../../../models";
 import styles from "./Input.module.scss";
 import classNames from "classnames";
 
+export type OptionType = {
+  label: React.ReactNode;
+  value?: string | number | null;
+};
+
 type Props = {
   name: keyof UkgExaminationForm;
   required?: boolean;
+  onSearch?: (value: string) => void;
+  options?: OptionType[];
 };
 
-const TextInput = ({ name, required }: Props) => {
+const AutocompleteInput = ({ name, onSearch, options, required }: Props) => {
   const { t } = useTranslation("form");
 
   return (
@@ -23,10 +30,14 @@ const TextInput = ({ name, required }: Props) => {
         required={required}
         rules={[{ required, message: t(`${name}_error`) }]}
       >
-        <Input placeholder={t(name)} />
+        <AutoComplete
+          placeholder={t(name)}
+          options={options}
+          onSearch={onSearch}
+        />
       </Form.Item>
     </>
   );
 };
 
-export default TextInput;
+export default AutocompleteInput;
