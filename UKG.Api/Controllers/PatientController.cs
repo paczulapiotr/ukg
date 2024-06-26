@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UKG.Api.Models;
+using UKG.Backend.Exceptions;
 using UKG.Backend.Models;
 using UKG.Backend.Services;
 
@@ -24,9 +25,9 @@ public class PatientController : ControllerBase
     }
 
     [HttpGet("list")]
-    public async Task<ActionResult> List([FromQuery] string pesel, int page = 1, int pageSize = 10)
+    public async Task<ActionResult> List([FromQuery] string? search, int page = 1, int pageSize = 10)
     {
-        var result = await _ukgService.ListPatients(pesel, page, pageSize);
+        var result = await _ukgService.ListPatients(search, page, pageSize);
 
         return Ok(result);
     }

@@ -1,10 +1,11 @@
 import Container from "@/components/ExamForm/Container";
-import DatePickerInput from "@/components/ExamForm/common/DatePickerInput";
-import TextInput from "@/components/ExamForm/common/TextInput";
 import { PatientForm } from "@/models";
 import useAddPatient from "@/queries/useAddPatient";
-import { Button, Flex, Form, Space, Input, message } from "antd";
+import { getBirthdayFromPesel, validatePesel } from "@/utility/patient";
+import { Button, Flex, Form, Space, message } from "antd";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import FormItems from "./FormItems";
 
 const layout = {
   labelCol: { span: 8 },
@@ -32,7 +33,7 @@ const Upsert = () => {
   };
 
   return (
-    <Flex vertical>
+    <Flex vertical flex={1}>
       <Form
         {...layout}
         initialValues={{ id }}
@@ -43,13 +44,7 @@ const Upsert = () => {
         style={{ minWidth: "600px", flex: 1 }}
       >
         <Container name="1" focusedSection={"1"}>
-          <Form.Item name="id" hidden>
-            <Input />
-          </Form.Item>
-          <TextInput name="Pesel" required />
-          <TextInput name="FirstName" required />
-          <TextInput name="LastName" required />
-          <DatePickerInput name="BirthdayDate" required />
+          <FormItems />
         </Container>
       </Form>
       <Flex justify="flex-end">

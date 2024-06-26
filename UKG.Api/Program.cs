@@ -10,6 +10,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using UKG.Auth;
 using UKG.Api;
+using FluentValidation;
+using System.Reflection;
+using UKG.Backend.Validators;
+using UKG.Api.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,13 +23,19 @@ builder.Services.AddTransient<IUkgService, UkgService>();
 builder.Services.AddTransient<IUkgRepository, UkgSqlRepository>();
 builder.Services.AddTransient<IPatientRepository, PatientSqlRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
-builder.Services.AddAutoMapper(c => {
+builder.Services.AddValidatorsFromAssemblies(new List<Assembly> { typeof(Program).Assembly, typeof(ValidationMessages).Assembly });
+builder.Services.AddAutoMapper(c =>
+{
     c.AddProfile(new MapperConfiguration());
     c.AddProfile(new ApiMapperConfiguration());
 });
 
 // Add controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers(opts =>
+{
+    opts.Filters.Add<MainExceptionFilter>();
+    opts.Filters.Add<FluentValidationExceptionFilter>();
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -83,6 +93,16 @@ builder.Services.AddAuthorization();
 
 // Build
 var app = builder.Build();
+
+// Migrate the contexts
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var ukgDbContext = services.GetRequiredService<UkgDbContext>();
+    var authDbContext = services.GetRequiredService<AuthDbContext>();
+    ukgDbContext.Database.Migrate();
+    authDbContext.Database.Migrate();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

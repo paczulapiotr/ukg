@@ -3,13 +3,15 @@ import { useTranslation } from "react-i18next";
 import { UkgExaminationForm } from "../../../models";
 import styles from "./Input.module.scss";
 import classNames from "classnames";
+import { Rule } from "antd/es/form";
 
 type Props = {
   name: keyof UkgExaminationForm;
   required?: boolean;
+  rules?: Rule[];
 };
 
-const TextInput = ({ name, required }: Props) => {
+const TextInput = ({ name, required, rules }: Props) => {
   const { t } = useTranslation("form");
 
   return (
@@ -21,7 +23,7 @@ const TextInput = ({ name, required }: Props) => {
         name={name}
         className={classNames(styles.input, "focusable")}
         required={required}
-        rules={[{ required, message: t(`${name}_error`) }]}
+        rules={[{ required, message: t(`${name}_error`) }, ...(rules ?? [])]}
       >
         <Input placeholder={t(name)} />
       </Form.Item>

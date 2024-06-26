@@ -56,7 +56,7 @@ const useMenuItems = (): MenuItem[] => {
           "patient_search",
           <SearchOutlined />,
           undefined,
-          () => navigate("/patient/search")
+          () => navigate("/patient")
         ),
       ]),
       getItem("Badania", "ukg", <FileTextOutlined />, [

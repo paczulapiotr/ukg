@@ -3,7 +3,7 @@ import { queryKeys } from "./queryKeys";
 import instance from "@/services/api";
 import { TableData } from "./types";
 
-export type UkgPatientItem = {
+export type PatientListItem = {
   id: string;
   firstName: string;
   lastName: string;
@@ -11,18 +11,25 @@ export type UkgPatientItem = {
   birthday: string;
 };
 
-const useGetUkgList = (page: number, pageSize: number, pesel?: string) => {
+const useGetPatientList = (page: number, pageSize: number, search?: string) => {
+  const params = new URLSearchParams();
+  params.append("pageSize", pageSize.toString());
+  params.append("page", page.toString());
+
+  if (search != null) {
+    params.append("search", search);
+  }
+
   return useQuery({
     queryFn: async () =>
       (
-        await instance.get<TableData<UkgPatientItem>>(
-          `/patient/list?pageSize=${pageSize}&page=${page}`
+        await instance.get<TableData<PatientListItem>>(
+          `/patient/list?${params.toString()}`
         )
       ).data,
     initialData: { data: [], total: 0 },
-    // enabled: pesel != null,
-    queryKey: [queryKeys.patientList, page, pageSize, pesel],
+    queryKey: [queryKeys.patientList, page, pageSize, search],
   });
 };
 
-export default useGetUkgList;
+export default useGetPatientList;

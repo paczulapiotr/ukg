@@ -16,7 +16,9 @@ const useAddPatient = () => {
     mutationFn: async (model: AddPatientModel) =>
       (
         await instance.post("/patient", {
-          ...model,
+          firstName: model.firstName.trim(),
+          lastName: model.lastName.trim(),
+          pesel: model.pesel.trim(),
           birthday: model.birthday.format("YYYY-MM-DD"),
         })
       ).data,

@@ -3,6 +3,7 @@ using UKG.Storage.Repositories;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UKG.Storage.Models;
+using FluentValidation;
 
 namespace UKG.Backend.Services;
 
@@ -11,17 +12,20 @@ public class UkgService : IUkgService
     private readonly IUkgRepository _ukgRepository;
     private readonly IPatientRepository _patientRepository;
     private readonly IMapper _mapper;
+    private readonly IValidator<PatientSimple> _patientValidator;
     private readonly IAuthService _authService;
 
     public UkgService(
         IUkgRepository ukgRepository,
         IPatientRepository patientRepository,
         IMapper mapper,
+        IValidator<PatientSimple> patientValidator,
         IAuthService authService)
     {
         _ukgRepository = ukgRepository;
         _patientRepository = patientRepository;
         _mapper = mapper;
+        _patientValidator = patientValidator;
         _authService = authService;
     }
 
@@ -62,14 +66,15 @@ public class UkgService : IUkgService
         return new TableData<UkgSimple>(total, _mapper.Map<UkgSimple[]>(ukgs));
     }
 
-    public async Task<TableData<PatientSimple>> ListPatients(string? pesel, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    public async Task<TableData<PatientSimple>> ListPatients(string? search, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
         var submitterId = _authService.GetID();
         var query = _patientRepository.Query().Where(p => p.SubmitterID == submitterId);
 
-        if (pesel is not null)
+        if (search is not null)
         {
-            query = query.Where(x => x.Pesel.Contains(pesel, StringComparison.InvariantCultureIgnoreCase));
+            query = query.Where(x => x.Pesel.Contains(search)
+            || x.FullName!.Contains(search));
         }
 
         var total = await query.CountAsync();
@@ -86,12 +91,7 @@ public class UkgService : IUkgService
 
     public async Task<int> AddPatient(PatientSimple dto, CancellationToken cancellationToken = default)
     {
-        // todo: validate dto
-        var isUnique = !await _patientRepository.Query().AnyAsync(x => x.Pesel == dto.Pesel);
-        if (!isUnique)
-        {
-            throw new ArgumentException("Pesel must be unique.");
-        }
+        await _patientValidator.ValidateAndThrowAsync(dto, cancellationToken);
 
         var submitterId = _authService.GetID();
 
