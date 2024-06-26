@@ -12,8 +12,8 @@ const columns: ColumnsType<PatientListItem> = [
     title: "Pacjent",
     dataIndex: "fullName",
     key: "fullName",
-    render: (_, { firstName, lastName }) => (
-      <Link to={"/"}>{`${firstName} ${lastName}`}</Link>
+    render: (_, { firstName, lastName, id }) => (
+      <Link to={`/patient/details/${id}`}>{`${firstName} ${lastName}`}</Link>
     ),
   },
 

@@ -1,25 +1,20 @@
-import Container from "@/components/ExamForm/Container";
+import Container from "@/components/common/Container";
 import { PatientForm } from "@/models";
 import useAddPatient from "@/queries/useAddPatient";
-import { getBirthdayFromPesel, validatePesel } from "@/utility/patient";
 import { Button, Flex, Form, Space, message } from "antd";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import FormItems from "./FormItems";
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
+import { formLayout } from "@/common/form";
 
 const Upsert = () => {
   const [form] = Form.useForm<PatientForm>();
   const { id } = useParams<{ id: string }>();
   const { mutateAsync } = useAddPatient();
+  const navigate = useNavigate();
 
   const onFinish = async (values: PatientForm) => {
     try {
-      await mutateAsync({
+      const id = await mutateAsync({
         firstName: values.FirstName,
         lastName: values.LastName,
         pesel: values.Pesel,
@@ -27,6 +22,7 @@ const Upsert = () => {
       });
       message.info("Pomyślnie zapisano pacjenta");
       form.resetFields();
+      navigate(`/patient/details/${id}`);
     } catch (err) {
       message.error("Wystąpił błąd podczas zapisywania pacjenta");
     }
@@ -35,7 +31,7 @@ const Upsert = () => {
   return (
     <Flex vertical flex={1}>
       <Form
-        {...layout}
+        {...formLayout}
         initialValues={{ id }}
         disabled={false}
         form={form}

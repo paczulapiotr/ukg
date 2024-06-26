@@ -1,6 +1,6 @@
 import { Form, Input, Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import { UkgExaminationForm } from "../../../models";
+import { UkgExaminationForm } from "../../models";
 import styles from "./Input.module.scss";
 import classNames from "classnames";
 import { Rule } from "antd/es/form";

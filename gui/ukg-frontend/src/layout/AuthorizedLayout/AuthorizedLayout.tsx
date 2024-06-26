@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   UserOutlined,
-  FileTextOutlined,
-  FileAddOutlined,
   SearchOutlined,
   SettingOutlined,
   PlusOutlined,
@@ -49,7 +47,7 @@ const useMenuItems = (): MenuItem[] => {
           "patient_add",
           <PlusOutlined />,
           undefined,
-          () => navigate("/patient/upsert")
+          () => navigate("/patient/add")
         ),
         getItem(
           "Wyszukaj",
@@ -57,14 +55,6 @@ const useMenuItems = (): MenuItem[] => {
           <SearchOutlined />,
           undefined,
           () => navigate("/patient")
-        ),
-      ]),
-      getItem("Badania", "ukg", <FileTextOutlined />, [
-        getItem("Nowe badanie", "ukg_add", <FileAddOutlined />, undefined, () =>
-          navigate("/ukg/add")
-        ),
-        getItem("Wyszukaj", "ukg_search", <SearchOutlined />, undefined, () =>
-          navigate("/ukg")
         ),
       ]),
       getItem("Profil", "user", <SettingOutlined />, [

@@ -1,14 +1,22 @@
-import { Form, DatePicker, Typography } from "antd";
+import { AutoComplete, Form, Typography } from "antd";
 import { useTranslation } from "react-i18next";
-import { UkgExaminationForm } from "../../../models";
+import { UkgExaminationForm } from "../../models";
 import styles from "./Input.module.scss";
 import classNames from "classnames";
+
+export type OptionType = {
+  label: React.ReactNode;
+  value?: string | number | null;
+};
 
 type Props = {
   name: keyof UkgExaminationForm;
   required?: boolean;
+  onSearch?: (value: string) => void;
+  options?: OptionType[];
 };
-const DatePickerInput = ({ name, required }: Props) => {
+
+const AutocompleteInput = ({ name, onSearch, options, required }: Props) => {
   const { t } = useTranslation("form");
 
   return (
@@ -19,14 +27,17 @@ const DatePickerInput = ({ name, required }: Props) => {
       <Form.Item
         name={name}
         className={classNames(styles.input, "focusable")}
-        style={{ width: "fit-content" }}
         required={required}
         rules={[{ required, message: t(`${name}_error`) }]}
       >
-        <DatePicker className={styles.border} format={"DD-MM-YYYY"} />
+        <AutoComplete
+          placeholder={t(name)}
+          options={options}
+          onSearch={onSearch}
+        />
       </Form.Item>
     </>
   );
 };
 
-export default DatePickerInput;
+export default AutocompleteInput;

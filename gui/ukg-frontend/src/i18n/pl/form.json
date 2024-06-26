@@ -6,5 +6,7 @@
   "Pesel": "PESEL",
   "Pesel_error": "PESEL jest wymagany",
   "BirthdayDate": "Data urodzenia",
-  "BirthdayDate_error": "Data urodzenia jest wymagana"
+  "BirthdayDate_error": "Data urodzenia jest wymagana",
+  "Summary": "Podsumowanie",
+  "Summary_error": "Podsumowanie jest wymagane"
 }

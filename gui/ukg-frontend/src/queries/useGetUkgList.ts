@@ -4,16 +4,10 @@ import instance from "@/services/api";
 import { TableData } from "./types";
 
 export type UkgListItem = {
-  ID?: number;
-  SubmitterID?: number;
-  SubmitterName?: string;
-  CreatedAt: Date;
-  UpdatedAt?: Date;
-  PESEL: string;
-  FirstName: string;
-  SecondName: string;
-  FullName: string;
-  Birthday: Date;
+  id?: number;
+  created: string;
+  updated?: string;
+  summary?: string;
 };
 
 const useGetUkgList = (page: number, pageSize: number, patientId?: string) => {

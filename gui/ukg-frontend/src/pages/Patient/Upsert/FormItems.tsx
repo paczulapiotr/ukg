@@ -1,16 +1,19 @@
 import { Form as AntForm, Form, Input } from "antd";
-import TextInput from "@/components/ExamForm/common/TextInput";
-import DatePickerInput from "@/components/ExamForm/common/DatePickerInput";
+import TextInput from "@/components/common/TextInput";
+import DatePickerInput from "@/components/common/DatePickerInput";
 import { getBirthdayFromPesel, validatePesel } from "@/utility/patient";
 import { useEffect } from "react";
 
-const FormItems = () => {
+export type Props = {
+  readonly?: boolean;
+};
+
+const FormItems = ({ readonly = false }: Props) => {
   const form = Form.useFormInstance();
   const pesel = Form.useWatch("Pesel");
 
   useEffect(() => {
-    debugger;
-    if (validatePesel(pesel)) {
+    if (!readonly && validatePesel(pesel)) {
       form.setFieldsValue({ BirthdayDate: getBirthdayFromPesel(pesel) });
     }
   });

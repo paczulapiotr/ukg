@@ -25,9 +25,17 @@ public class PatientController : ControllerBase
     }
 
     [HttpGet("list")]
-    public async Task<ActionResult> List([FromQuery] string? search, int page = 1, int pageSize = 10)
+    public async Task<ActionResult> List([FromQuery] string? search, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        var result = await _ukgService.ListPatients(search, page, pageSize);
+        var result = await _ukgService.ListPatients(search, page, pageSize, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult> Get([FromRoute] string id, CancellationToken cancellationToken = default)
+    {
+        var result = await _ukgService.FindPatient(id, cancellationToken);
 
         return Ok(result);
     }

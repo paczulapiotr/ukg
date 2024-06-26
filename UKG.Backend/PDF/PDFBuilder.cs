@@ -12,11 +12,11 @@ public class PDFBuilder : IPDFBuilder
     private readonly static uint _borderSize = 1;
     private readonly static uint _borderGap = 1;
 
-    public async Task<Stream> Create(UkgSummary ukgSummary)
+    public async Task<Stream> Create(PatientSimple patient, UkgSummary ukgSummary)
     {
         return await Task.Run(() =>
         {
-            var document = Document.Create(DocumentBuilder(ukgSummary));
+            var document = Document.Create(DocumentBuilder(patient, ukgSummary));
 
             document.WithSettings(new()
             {
@@ -29,7 +29,7 @@ public class PDFBuilder : IPDFBuilder
             return stream;
         });
     }
-    public static Action<IDocumentContainer> DocumentBuilder(UkgSummary ukg)
+    public static Action<IDocumentContainer> DocumentBuilder(PatientSimple patient, UkgSummary ukg)
     {
         return container =>
         {
@@ -71,10 +71,10 @@ public class PDFBuilder : IPDFBuilder
                         table.Cell().ColumnSpan(4).Element(Cell).Text($"Przeprowadzone przez: {ukg.SubmitterName}");
                         table.Cell().ColumnSpan(4).Element(Cell).Text($"Data badania: {ukg.CreatedAt:dd-MM-yyyy HH:mm:ss}");
 
-                        table.Cell().ColumnSpan(4).Element(Cell).Text($"PESEL: {ukg.Pesel}");
-                        table.Cell().ColumnSpan(4).Element(Cell).Text($"Data urodzenia: {ukg.Birthday:dd-MM-yyyy}, wiek: {CalculateAge(ukg.Birthday, ukg.CreatedAt)}");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"PESEL: {patient.Pesel}");
+                        table.Cell().ColumnSpan(4).Element(Cell).Text($"Data urodzenia: {patient.Birthday:dd-MM-yyyy}, wiek: {CalculateAge(patient.Birthday, ukg.CreatedAt)}");
 
-                        Field(table, "Imię i nazwisko", ukg.FullName);
+                        Field(table, "Imię i nazwisko", patient.FullName);
 
                         SmallField(table, 2, "Ao:", ukg.Ao);
                         SmallField(table, 6, "ACS:", ukg.ACS);

@@ -1,10 +1,6 @@
 import { Dayjs } from "dayjs";
-export type UkgExamination = {
-  ID?: string;
-  Pesel: string;
-  FirstName: string;
-  LastName: string;
-  Birthday?: string;
+
+export type UkgExaminationForm = {
   Ao?: string | null;
   ACS?: string | null;
   LA?: string | null;
@@ -35,6 +31,8 @@ export type UkgExamination = {
   Summary?: string | null;
 };
 
+export type UkgExamination = UkgExaminationForm & { PatientID: string };
+
 export type PatientForm = {
   ID?: string;
   Pesel: string;
@@ -42,5 +40,3 @@ export type PatientForm = {
   LastName: string;
   BirthdayDate: Dayjs;
 };
-
-export type UkgExaminationForm = UkgExamination & PatientForm;

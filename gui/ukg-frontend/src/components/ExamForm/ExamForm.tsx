@@ -1,60 +1,58 @@
-import { Button, Form } from "antd";
+import { Button, Flex, Form, message } from "antd";
 import { UkgExaminationForm } from "../../models";
-import TextInput from "./common/TextInput";
-import TextAreaInput from "./common/TextAreaInput";
-import DatePickerInput from "./common/DatePickerInput";
+import TextInput from "../common/TextInput";
+import TextAreaInput from "../common/TextAreaInput";
 import { useState } from "react";
-import Container from "./Container";
-import useAddUkg from "@/queries/useAddUkg";
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
+import Container from "../common/Container";
+import { formLayout, formStyle } from "@/common/form";
 
 type FocusedSection = "1" | "2" | "3" | "4" | "5" | "6";
 
-type Props = {};
+type Props = {
+  onFinish: (values: UkgExaminationForm) => Promise<void>;
+  onCancel: () => void;
+};
 
-const IDName: keyof UkgExaminationForm = "ID";
-
-const ExamForm = ({}: Props) => {
+const ExamForm = ({ onFinish, onCancel }: Props) => {
   const [form] = Form.useForm<UkgExaminationForm>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [focusedSection, setFocusedSection] = useState<FocusedSection>();
-  const onFinish = async (values: UkgExaminationForm) => {
-    console.log(values);
-    console.log("Date:", values.BirthdayDate?.format("YYYY-MM-DD"));
-    values.Birthday = values.BirthdayDate?.format("YYYY-MM-DD");
-    await mutateAsync(values);
-  };
-  const { mutateAsync, isPending } = useAddUkg();
 
-  const onReset = () => {
+  const onCancelHandle = () => {
     form.resetFields();
+    onCancel();
+  };
+
+  const onFinishHandle = async (values: UkgExaminationForm) => {
+    try {
+      setIsSubmitting(true);
+      await onFinish(values);
+      message.info("Pomyślnie dodano badanie");
+      onCancelHandle();
+    } catch (err) {
+      console.error(err);
+      message.error("Wystąpił błąd podczas dodawania badania");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div>
       <Form
-        {...layout}
-        disabled={isPending}
+        {...formLayout}
+        disabled={isSubmitting}
         form={form}
         name="ukg-examination"
-        onFinish={onFinish}
+        onFinish={onFinishHandle}
         onSubmitCapture={(e) => console.log(e)}
-        style={{ minWidth: "600px" }}
+        style={formStyle}
       >
-        <Form.Item name={IDName} hidden />
         <Container<FocusedSection>
           name="1"
           setFocusedSection={setFocusedSection}
           focusedSection={focusedSection}
         >
-          <TextInput name="Pesel" />
-          <TextInput name="FirstName" />
-          <TextInput name="LastName" />
-          <DatePickerInput name="BirthdayDate" />
-
           <TextInput name="Ao" />
           <TextInput name="ACS" />
           <TextInput name="LA" />
@@ -109,10 +107,17 @@ const ExamForm = ({}: Props) => {
         >
           <TextAreaInput name="ZastawkaPnia" />
           <TextAreaInput name="DopplerPnia" />
-          <TextAreaInput name="Summary" />
+          <TextAreaInput required name="Summary" />
         </Container>
       </Form>
-      <Button onClick={() => form.submit()}>Save</Button>
+      <Flex justify="flex-end" gap={"1rem"}>
+        <Button disabled={isSubmitting} onClick={onCancelHandle}>
+          {"Anuluj"}
+        </Button>
+        <Button disabled={isSubmitting} onClick={form.submit} type="primary">
+          {"Dodaj"}
+        </Button>
+      </Flex>
     </div>
   );
 };

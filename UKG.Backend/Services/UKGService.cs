@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UKG.Storage.Models;
 using FluentValidation;
+using QuestPDF.Helpers;
 
 namespace UKG.Backend.Services;
 
@@ -79,13 +80,21 @@ public class UkgService : IUkgService
 
         var total = await query.CountAsync();
 
-        var ukgs = await query
+        var patients = await query
             .OrderByDescending(u => u.FullName)
             .Skip(Math.Max(0, (page - 1) * pageSize))
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return new TableData<PatientSimple>(total, _mapper.Map<PatientSimple[]>(ukgs));
+        return new TableData<PatientSimple>(total, _mapper.Map<PatientSimple[]>(patients));
+    }
+
+    public async Task<PatientSimple> FindPatient(string id, CancellationToken cancellationToken = default)
+    {
+        var submitterId = _authService.GetID();
+        var patient = await _patientRepository.Query().Where(p => p.SubmitterID == submitterId && p.ID == int.Parse(id)).SingleOrDefaultAsync();
+
+        return _mapper.Map<PatientSimple>(patient);
     }
 
 
@@ -123,4 +132,5 @@ public class UkgService : IUkgService
     {
         throw new NotImplementedException();
     }
+
 }
