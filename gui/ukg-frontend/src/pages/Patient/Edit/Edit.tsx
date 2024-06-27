@@ -26,7 +26,7 @@ const Edit = () => {
         pesel: values.pesel,
         birthday: values.birthdayDate,
       });
-      message.info("Pomyślnie zapisano pacjenta");
+      message.success("Pomyślnie zapisano pacjenta");
       form.resetFields();
       navigate(`/patient/${patientId}`);
     } catch (err) {

@@ -1,9 +1,9 @@
 import { UkgListItem } from "@/queries/useGetUkgList";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { Button, Table, TableProps, Typography } from "antd";
+import { Table, TableProps, Typography } from "antd";
 import { Link } from "react-router-dom";
-import { formatDateTime } from "@/utility/date";
+import { formatCompressedDateTime, formatDateTime } from "@/utility/date";
 import { pageSizes } from "@/utility/table";
 import { FilePdfOutlined } from "@ant-design/icons";
 import { DownloadButton } from "@/components/common/DownloadButton";
@@ -68,7 +68,9 @@ const UkgTable = ({
         <DownloadButton
           icon={<FilePdfOutlined />}
           url={`/ukg/pdf/${id}`}
-          fileName={`Badanie_UKG_${created}`}
+          fileName={`Badanie_UKG_${formatCompressedDateTime(
+            dayjs(created)
+          )}.pdf`}
         >
           {"Pobierz PDF"}
         </DownloadButton>

@@ -1,6 +1,7 @@
 import { Button, message } from "antd";
 import React, { useState } from "react";
-import fileDownload from "js-file-download";
+import { save } from "@tauri-apps/api/dialog";
+import { writeBinaryFile } from "@tauri-apps/api/fs";
 import instance from "@/services/api";
 
 type Props = {
@@ -16,11 +17,35 @@ const DownloadButton = ({ icon, children, url, fileName }: Props) => {
     try {
       setIsLoading(true);
       const response = await instance.get(url, {
-        headers: { Accept: "application/pdf" },
         responseType: "blob",
       });
-      fileDownload(response.data, `${fileName}.pdf`);
-      message.success("Plik został pobrany");
+      const blob = response.data;
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(blob);
+
+      const loadPromise = new Promise((resolve) => {
+        reader.onloadend = async () => {
+          const buffer = reader.result;
+
+          // Use Tauri's save dialog to get path
+          const path = await save({
+            defaultPath: fileName,
+          });
+
+          if (!path) {
+            resolve(false);
+          } else {
+            // Use Tauri's writeFile API to save the PDF
+            await writeBinaryFile(path, buffer as ArrayBuffer);
+            resolve(true);
+          }
+        };
+      });
+
+      const result = await loadPromise;
+      if (result) {
+        message.success("Plik został pobrany");
+      }
     } catch (error) {
       console.error(error);
       message.error("Wystąpił błąd podczas pobierania pliku");

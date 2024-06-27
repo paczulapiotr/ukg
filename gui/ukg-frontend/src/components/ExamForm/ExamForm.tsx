@@ -49,7 +49,7 @@ const ExamForm = ({
     try {
       setIsSubmitting(true);
       await onFinish(values);
-      message.info("Pomyślnie zapisano badanie");
+      message.success("Pomyślnie zapisano badanie");
     } catch (err) {
       console.error(err);
       message.error("Wystąpił błąd podczas zapisywania badania");

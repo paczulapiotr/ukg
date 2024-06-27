@@ -9,8 +9,8 @@ import NotFoundPage from "@/pages/common/NotFoundPage";
 import useEditUkg from "@/queries/useEditUkg";
 import useGetPatient from "@/queries/useGetPatient";
 import useGetUkg from "@/queries/useGetUkg";
-import { formatDateTime } from "@/utility/date";
-import { Button, Flex, Form } from "antd";
+import { formatCompressedDateTime, formatDateTime } from "@/utility/date";
+import { Flex, Form } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -73,7 +73,9 @@ const Details = () => {
           <DownloadButton
             icon={<FilePdfOutlined />}
             url={`/ukg/pdf/${data?.id}`}
-            fileName={`Badanie_UKG_${data?.createdAt}`}
+            fileName={`Badanie_UKG_${formatCompressedDateTime(
+              dayjs(data?.createdAt)
+            )}.pdf`}
           >
             {"Pobierz PDF"}
           </DownloadButton>

@@ -34,7 +34,7 @@ public class UkgController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult> Get([FromRoute] int id, CancellationToken cancellationToken = default) 
+    public async Task<ActionResult> Get([FromRoute] int id, CancellationToken cancellationToken = default)
     {
         var ukg = await _ukgService.Find(id, cancellationToken);
         return Ok(ukg);
@@ -69,7 +69,6 @@ public class UkgController : ControllerBase
 
         return Ok();
     }
-
 
     [HttpGet("pdf/{id}")]
     public async Task<ActionResult> Pdf([FromRoute] int id, CancellationToken cancellationToken = default)
