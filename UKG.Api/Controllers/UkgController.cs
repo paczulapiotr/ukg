@@ -72,9 +72,11 @@ public class UkgController : ControllerBase
 
 
     [HttpGet("pdf/{id}")]
-    public ActionResult Pdf([FromRoute] string id)
+    public async Task<ActionResult> Pdf([FromRoute] int id, CancellationToken cancellationToken = default)
     {
-        return Ok();
+        var pdf = await _ukgService.GenerateUkgPdf(id, cancellationToken);
+
+        return File(pdf, "application/pdf");
     }
 }
 

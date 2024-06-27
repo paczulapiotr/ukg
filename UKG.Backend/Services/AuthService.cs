@@ -29,14 +29,14 @@ public class AuthService : IAuthService
     public UserSimple GetUser()
     {
         var expirationString = _claimsPrincipal.Claims
-            .SingleOrDefault(c => c.Type == ClaimTypes.Expiration)?.Value;
-
-        DateTime? expiration = expirationString is null
-            ? null
-            : DateTime.Parse(expirationString);
+            .SingleOrDefault(c => c.Type == "exp")?.Value;
+       
+        DateTime? expiration = long.TryParse(expirationString, out long unixTimestamp)
+            ? DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime
+            : null;
 
         var name = _claimsPrincipal.Claims
-            .SingleOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+            .SingleOrDefault(c => c.Type == "name")?.Value;
 
         var id = GetID();
 

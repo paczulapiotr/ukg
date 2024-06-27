@@ -9,7 +9,7 @@ import classNames from "classnames";
 import { EditOutlined } from "@ant-design/icons";
 import styles from "./ExamForm.module.scss";
 
-type FocusedSection = "1" | "2" | "3" | "4" | "5" | "6";
+type FocusedSection = "1" | "2" | "3" | "4" | "5" | "6" | "7";
 
 type Props = {
   initialValues?: Partial<UkgExaminationForm>;
@@ -140,6 +140,29 @@ const ExamForm = ({
           focusedSection={focusedSection}
         >
           <TextAreaInput<UkgExaminationForm>
+            name="zastawkaAortalna"
+            readonly={readonly}
+          />
+          <TextAreaInput<UkgExaminationForm>
+            name="dopplerAortalna"
+            readonly={readonly}
+          />
+          <TextInput<UkgExaminationForm>
+            name="vmaxAortalna"
+            readonly={readonly}
+          />
+          <TextInput<UkgExaminationForm>
+            name="gmaxAortalna"
+            readonly={readonly}
+          />
+        </Container>
+        <Container<FocusedSection>
+          name="6"
+          readonly={readonly}
+          setFocusedSection={setFocusedSection}
+          focusedSection={focusedSection}
+        >
+          <TextAreaInput<UkgExaminationForm>
             name="zastawkaTrojdzielna"
             readonly={readonly}
           />
@@ -157,7 +180,7 @@ const ExamForm = ({
           />
         </Container>
         <Container<FocusedSection>
-          name="6"
+          name="7"
           readonly={readonly}
           setFocusedSection={setFocusedSection}
           focusedSection={focusedSection}

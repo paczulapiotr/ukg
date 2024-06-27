@@ -12,7 +12,7 @@ public class PDFBuilder : IPDFBuilder
     private readonly static uint _borderSize = 1;
     private readonly static uint _borderGap = 1;
 
-    public async Task<Stream> Create(PatientSimple patient, UkgSummary ukgSummary)
+    public async Task<byte[]> Create(PatientSimple patient, UkgSummary ukgSummary, CancellationToken cancellationToken = default)
     {
         return await Task.Run(() =>
         {
@@ -21,14 +21,13 @@ public class PDFBuilder : IPDFBuilder
             document.WithSettings(new()
             {
                 ImageCompressionQuality = ImageCompressionQuality.Best,
-                ContentDirection = ContentDirection.LeftToRight
+                ContentDirection = ContentDirection.LeftToRight,
             });
 
-            var stream = new MemoryStream();
-            document.GeneratePdf(stream);
-            return stream;
-        });
+            return document.GeneratePdf();
+        }, cancellationToken);
     }
+
     public static Action<IDocumentContainer> DocumentBuilder(PatientSimple patient, UkgSummary ukg)
     {
         return container =>

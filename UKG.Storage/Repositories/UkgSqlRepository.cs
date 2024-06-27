@@ -68,9 +68,9 @@ public class UkgSqlRepository : IUkgRepository
         await _ctx.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<UkgSummary?> FindOneByID(int id, int submitterId, CancellationToken cancellationToken = default)
+    public async Task<UkgSummary?> FindOneByID(int id, int submitterId, CancellationToken cancellationToken = default)
     {
-        return _ctx.UKGSummaries.AsNoTracking()
+        return await _ctx.UKGSummaries.AsNoTracking()
             .Where(x => x.SubmitterID == submitterId)
             .Include(x => x.Patient)
             .FirstOrDefaultAsync(x => x.ID == id, cancellationToken);

@@ -14,6 +14,10 @@ using FluentValidation;
 using System.Reflection;
 using UKG.Backend.Validators;
 using UKG.Api.Filters;
+using UKG.Backend.PDF;
+using QuestPDF.Infrastructure;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,7 @@ builder.Services.AddTransient<IUkgService, UkgService>();
 builder.Services.AddTransient<IUkgRepository, UkgSqlRepository>();
 builder.Services.AddTransient<IPatientRepository, PatientSqlRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IPDFBuilder, PDFBuilder>();
 builder.Services.AddValidatorsFromAssemblies(new List<Assembly> { typeof(Program).Assembly, typeof(ValidationMessages).Assembly });
 builder.Services.AddAutoMapper(c =>
 {

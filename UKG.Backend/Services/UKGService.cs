@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using UKG.Storage.Models;
 using FluentValidation;
 using UKG.Backend.Exceptions;
+using UKG.Backend.PDF;
 
 namespace UKG.Backend.Services;
 
@@ -15,19 +16,22 @@ public class UkgService : IUkgService
     private readonly IMapper _mapper;
     private readonly IValidator<PatientSimple> _patientValidator;
     private readonly IAuthService _authService;
+    private readonly IPDFBuilder _pdfBuilder;
 
     public UkgService(
         IUkgRepository ukgRepository,
         IPatientRepository patientRepository,
         IMapper mapper,
         IValidator<PatientSimple> patientValidator,
-        IAuthService authService)
+        IAuthService authService,
+        IPDFBuilder pdfBuilder)
     {
         _ukgRepository = ukgRepository;
         _patientRepository = patientRepository;
         _mapper = mapper;
         _patientValidator = patientValidator;
         _authService = authService;
+        _pdfBuilder = pdfBuilder;
     }
 
     public async Task<int> Add(Models.UkgSummary ukgSummary, CancellationToken cancellationToken = default)
@@ -166,5 +170,20 @@ public class UkgService : IUkgService
     public async Task DeletePatient(int id, CancellationToken cancellationToken)
     {
         await _patientRepository.Delete(id, cancellationToken);
+    }
+
+    public async Task<byte[]> GenerateUkgPdf(int ukgId, CancellationToken cancellationToken)
+    {
+        var user = _authService.GetUser();
+        var submitterId = user.ID!.Value;
+
+        var ukg = await _ukgRepository.FindOneByID(ukgId, user.ID!.Value, cancellationToken);
+        var patient = await _patientRepository.FindOneByID(ukg!.PatientID, submitterId, cancellationToken);
+
+        var p = _mapper.Map<PatientSimple>(patient);
+        var u = _mapper.Map<Models.UkgSummary>(ukg);
+        u.SubmitterName = user.FullName;
+
+        return await _pdfBuilder.Create(p, u, cancellationToken);
     }
 }

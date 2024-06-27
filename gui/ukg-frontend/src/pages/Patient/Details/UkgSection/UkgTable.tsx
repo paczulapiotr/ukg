@@ -1,10 +1,12 @@
 import { UkgListItem } from "@/queries/useGetUkgList";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { Table, TableProps, Typography } from "antd";
+import { Button, Table, TableProps, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { formatDateTime } from "@/utility/date";
-import { defaultPageSize, pageSizes } from "@/utility/table";
+import { pageSizes } from "@/utility/table";
+import { FilePdfOutlined } from "@ant-design/icons";
+import { DownloadButton } from "@/components/common/DownloadButton";
 
 type Props = {
   patientId: string;
@@ -56,6 +58,20 @@ const UkgTable = ({
         <Typography.Text ellipsis title={summary}>
           {summary}
         </Typography.Text>
+      ),
+    },
+    {
+      title: "PDF",
+      key: "pdf",
+      align: "end",
+      render: (_, { id, created }) => (
+        <DownloadButton
+          icon={<FilePdfOutlined />}
+          url={`/ukg/pdf/${id}`}
+          fileName={`Badanie_UKG_${created}`}
+        >
+          {"Pobierz PDF"}
+        </DownloadButton>
       ),
     },
   ];

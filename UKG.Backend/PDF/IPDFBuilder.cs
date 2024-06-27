@@ -4,5 +4,5 @@ namespace UKG.Backend.PDF;
 
 public interface IPDFBuilder
 {
-    Task<Stream> Create(PatientSimple patient, UkgSummary ukgSummary);
+    Task<byte[]> Create(PatientSimple patient, UkgSummary ukgSummary, CancellationToken cancellationToken = default);
 }

@@ -10,10 +10,12 @@ import useEditUkg from "@/queries/useEditUkg";
 import useGetPatient from "@/queries/useGetPatient";
 import useGetUkg from "@/queries/useGetUkg";
 import { formatDateTime } from "@/utility/date";
-import { Flex, Form } from "antd";
+import { Button, Flex, Form } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { FilePdfOutlined } from "@ant-design/icons";
+import { DownloadButton } from "@/components/common/DownloadButton";
 
 const Details = () => {
   const [form] = Form.useForm();
@@ -62,10 +64,21 @@ const Details = () => {
 
   return (
     <Flex vertical gap={"1rem"}>
-      <PageTitle
-        title={"Szczegóły badania"}
-        returnTo={`/patient/${patientId}`}
-      />
+      <Flex justify="space-between">
+        <PageTitle
+          title={"Szczegóły badania"}
+          returnTo={`/patient/${patientId}`}
+        />
+        {isLoading ? null : (
+          <DownloadButton
+            icon={<FilePdfOutlined />}
+            url={`/ukg/pdf/${data?.id}`}
+            fileName={`Badanie_UKG_${data?.createdAt}`}
+          >
+            {"Pobierz PDF"}
+          </DownloadButton>
+        )}
+      </Flex>
       <PatientForm
         readonly
         form={form}
