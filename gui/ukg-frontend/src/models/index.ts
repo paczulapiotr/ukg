@@ -1,42 +1,43 @@
 import { Dayjs } from "dayjs";
 
 export type UkgExaminationForm = {
-  Ao?: string | null;
-  ACS?: string | null;
-  LA?: string | null;
-  RV?: string | null;
-  LVs?: string | null;
-  LVd?: string | null;
-  IVSs?: string | null;
-  IVSd?: string | null;
-  LVPWs?: string | null;
-  LVPWd?: string | null;
-  EF?: string | null;
-  Kurczliwosc?: string | null;
-  Osierdzie?: string | null;
-  ZastawkaMitralna?: string | null;
-  DopplerMitralna?: string | null;
-  VmaxMitralna?: string | null;
-  GmaxMitralna?: string | null;
-  ZastawkaAortalna?: string | null;
-  DopplerAortalna?: string | null;
-  VmaxAortalna?: string | null;
-  GmaxAortalna?: string | null;
-  ZastawkaTrojdzielna?: string | null;
-  DopplerTrojdzielna?: string | null;
-  VmaxTrojdzielna?: string | null;
-  GmaxTrojdzielna?: string | null;
-  ZastawkaPnia?: string | null;
-  DopplerPnia?: string | null;
-  Summary?: string | null;
+  ao?: string | null;
+  acs?: string | null;
+  la?: string | null;
+  rv?: string | null;
+  lvs?: string | null;
+  lvd?: string | null;
+  ivss?: string | null;
+  ivsd?: string | null;
+  lvpws?: string | null;
+  lvpwd?: string | null;
+  ef?: string | null;
+  kurczliwosc?: string | null;
+  osierdzie?: string | null;
+  zastawkaMitralna?: string | null;
+  dopplerMitralna?: string | null;
+  vmaxMitralna?: string | null;
+  gmaxMitralna?: string | null;
+  zastawkaAortalna?: string | null;
+  dopplerAortalna?: string | null;
+  vmaxAortalna?: string | null;
+  gmaxAortalna?: string | null;
+  zastawkaTrojdzielna?: string | null;
+  dopplerTrojdzielna?: string | null;
+  vmaxTrojdzielna?: string | null;
+  gmaxTrojdzielna?: string | null;
+  zastawkaPnia?: string | null;
+  dopplerPnia?: string | null;
+  summary?: string | null;
 };
 
 export type UkgExamination = UkgExaminationForm & { PatientID: string };
+export type EditUkgExamination = UkgExaminationForm & { Id: string };
 
-export type PatientForm = {
-  ID?: string;
-  Pesel: string;
-  FirstName: string;
-  LastName: string;
-  BirthdayDate: Dayjs;
+export type PatientFormModel = {
+  id: string;
+  pesel: string;
+  firstName: string;
+  lastName: string;
+  birthdayDate: Dayjs;
 };

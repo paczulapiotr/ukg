@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../auth/AuthProvider/useAuth";
 import { AuthorizedLayout } from "./AuthorizedLayout";
 import UnauthorizedLayout from "./UnauthorizedLayout/UnauthorizedLayout";
+import LoadingPage from "@/pages/common/LoadingPage";
 
 const MainLayout: React.FC = () => {
   const {
@@ -9,7 +10,7 @@ const MainLayout: React.FC = () => {
   } = useAuth();
 
   return isLoading ? (
-    <p>{"Ładowanie..."}</p>
+    <LoadingPage />
   ) : isAuthorized ? (
     <AuthorizedLayout />
   ) : (

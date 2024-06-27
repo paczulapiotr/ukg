@@ -1,11 +1,14 @@
 import useGetPatientList, {
   PatientListItem,
 } from "@/queries/useGetPatientList";
-import { Flex, Input, Table } from "antd";
+import { Button, Flex, Input, Table, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { PlusOutlined } from "@ant-design/icons";
+import { formatDate } from "@/utility/date";
+import { defaultPageSize, pageSizes } from "@/utility/table";
 
 const columns: ColumnsType<PatientListItem> = [
   {
@@ -13,7 +16,7 @@ const columns: ColumnsType<PatientListItem> = [
     dataIndex: "fullName",
     key: "fullName",
     render: (_, { firstName, lastName, id }) => (
-      <Link to={`/patient/details/${id}`}>{`${firstName} ${lastName}`}</Link>
+      <Link to={`/patient/${id}`}>{`${firstName} ${lastName}`}</Link>
     ),
   },
 
@@ -22,7 +25,7 @@ const columns: ColumnsType<PatientListItem> = [
     dataIndex: "birthday",
     render: (birthday) =>
       dayjs().diff(dayjs(birthday), "year") +
-      ` (${dayjs(birthday).format("DD MMM YYYY")})`,
+      ` (${formatDate(dayjs(birthday))})`,
     key: "birthday",
   },
   {
@@ -34,8 +37,9 @@ const columns: ColumnsType<PatientListItem> = [
 
 const Search = () => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(defaultPageSize);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const {
     data: { data, total },
@@ -44,6 +48,17 @@ const Search = () => {
 
   return (
     <Flex vertical flex={1} gap={"1rem"}>
+      <Flex justify="space-between">
+        <Typography.Title level={4} style={{ margin: 0 }}>
+          {"Wyszukaj pacjenta"}
+        </Typography.Title>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => navigate("/patient/add")}
+        >
+          {"Dodaj pacjenta"}
+        </Button>
+      </Flex>
       <Input.Search
         placeholder="Imię / Nazwisko / PESEL"
         onSearch={setSearch}
@@ -57,7 +72,7 @@ const Search = () => {
           total,
           pageSize,
           current: page,
-          pageSizeOptions: [2, 5, 10, 20],
+          pageSizeOptions: pageSizes,
           showSizeChanger: true,
         }}
         onChange={(pagination, _filters, _sorter) => {

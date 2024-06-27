@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UKG.Storage.Models;
 using FluentValidation;
-using QuestPDF.Helpers;
+using UKG.Backend.Exceptions;
 
 namespace UKG.Backend.Services;
 
@@ -40,6 +40,22 @@ public class UkgService : IUkgService
         await _ukgRepository.Add(ukg, cancellationToken);
 
         return ukg.ID;
+    }
+
+    public async Task Edit(int id, Models.UkgSummary ukgSummary, CancellationToken cancellationToken = default)
+    {
+        var submitterId = _authService.GetID();
+        var ukg = _mapper.Map<Models.UkgSummary, Storage.Models.UkgSummary>(ukgSummary);
+        ukg.SubmitterID = submitterId;
+
+        try
+        {
+            await _ukgRepository.Update(id, ukg, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            throw new MainException(ex, $"Updating UKG for ID ${id} failed");
+        }
     }
 
     public async Task<Models.UkgSummary> Find(int id, CancellationToken cancellationToken = default)
@@ -118,6 +134,30 @@ public class UkgService : IUkgService
         return patient.ID;
     }
 
+    public async Task EditPatient(int patientId, PatientSimple dto, CancellationToken cancellationToken = default)
+    {
+        await _patientValidator.ValidateAndThrowAsync(dto, cancellationToken);
+        var submitterId = _authService.GetID();
+
+        var patient = new Patient
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Pesel = dto.Pesel,
+            SubmitterID = submitterId,
+            Birthday = dto.Birthday
+        };
+
+        try
+        {
+            await _patientRepository.Update(patientId, patient, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            throw new MainException(ex, $"Updating patient for ID ${patientId} failed");
+        }
+    }
+
     public async Task Delete(int id, CancellationToken cancellationToken = default)
     {
         await _ukgRepository.Delete(id, cancellationToken);
@@ -127,10 +167,4 @@ public class UkgService : IUkgService
     {
         await _patientRepository.Delete(id, cancellationToken);
     }
-
-    public Task UpdatePatient(string id, UpdatePatientSimple patient, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
 }

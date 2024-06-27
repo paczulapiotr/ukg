@@ -3,10 +3,10 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useUkgData } from "../useUkgData";
 import UkgTable from "./UkgTable";
 
-type Props = { id: string; addNew: () => void };
+type Props = { patientId: string; addNew: () => void };
 
-const Readonly = ({ id, addNew }: Props) => {
-  const tableProps = useUkgData(id);
+const Readonly = ({ patientId, addNew }: Props) => {
+  const tableProps = useUkgData(patientId);
   const noUkgs = tableProps.total === 0;
 
   return noUkgs ? (
@@ -23,7 +23,7 @@ const Readonly = ({ id, addNew }: Props) => {
           {"Nowe badanie"}
         </Button>
       </Flex>
-      <UkgTable {...tableProps} />
+      <UkgTable patientId={patientId} {...tableProps} />
     </>
   );
 };

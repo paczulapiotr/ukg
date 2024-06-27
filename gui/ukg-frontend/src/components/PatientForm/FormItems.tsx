@@ -3,6 +3,7 @@ import TextInput from "@/components/common/TextInput";
 import DatePickerInput from "@/components/common/DatePickerInput";
 import { getBirthdayFromPesel, validatePesel } from "@/utility/patient";
 import { useEffect } from "react";
+import { PatientFormModel } from "@/models";
 
 export type Props = {
   readonly?: boolean;
@@ -10,21 +11,22 @@ export type Props = {
 
 const FormItems = ({ readonly = false }: Props) => {
   const form = Form.useFormInstance();
-  const pesel = Form.useWatch("Pesel");
+  const pesel = Form.useWatch("pesel");
 
   useEffect(() => {
     if (!readonly && validatePesel(pesel)) {
-      form.setFieldsValue({ BirthdayDate: getBirthdayFromPesel(pesel) });
+      form.setFieldsValue({ birthdayDate: getBirthdayFromPesel(pesel) });
     }
-  });
+  }, [pesel]);
 
   return (
     <>
       <AntForm.Item name="id" hidden>
         <Input />
       </AntForm.Item>
-      <TextInput
-        name="Pesel"
+      <TextInput<PatientFormModel>
+        readonly={readonly}
+        name="pesel"
         required
         rules={[
           {
@@ -36,9 +38,21 @@ const FormItems = ({ readonly = false }: Props) => {
           },
         ]}
       />
-      <TextInput name="FirstName" required />
-      <TextInput name="LastName" required />
-      <DatePickerInput name="BirthdayDate" required />
+      <TextInput<PatientFormModel>
+        name="firstName"
+        required
+        readonly={readonly}
+      />
+      <TextInput<PatientFormModel>
+        name="lastName"
+        required
+        readonly={readonly}
+      />
+      <DatePickerInput<PatientFormModel>
+        name="birthdayDate"
+        required
+        readonly={readonly}
+      />
     </>
   );
 };

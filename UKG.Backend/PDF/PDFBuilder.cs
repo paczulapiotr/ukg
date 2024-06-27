@@ -77,21 +77,21 @@ public class PDFBuilder : IPDFBuilder
                         Field(table, "Imię i nazwisko", patient.FullName);
 
                         SmallField(table, 2, "Ao:", ukg.Ao);
-                        SmallField(table, 6, "ACS:", ukg.ACS);
+                        SmallField(table, 6, "ACS:", ukg.Acs);
 
-                        SmallField(table, 2, "LA:", ukg.LA);
-                        SmallField(table, 6, "RV:", ukg.RV);
+                        SmallField(table, 2, "LA:", ukg.La);
+                        SmallField(table, 6, "RV:", ukg.Rv);
 
-                        SmallField(table, 2, "LVs:", ukg.LVs);
-                        SmallField(table, 6, "LVd:", ukg.LVd);
+                        SmallField(table, 2, "LVs:", ukg.Lvs);
+                        SmallField(table, 6, "LVd:", ukg.Lvd);
 
-                        SmallField(table, 2, "IVSs:", ukg.IVSs);
-                        SmallField(table, 6, "IVSd:", ukg.IVSd);
+                        SmallField(table, 2, "IVSs:", ukg.Ivss);
+                        SmallField(table, 6, "IVSd:", ukg.Ivsd);
 
-                        SmallField(table, 2, "LVPWs:", ukg.LVPWs);
-                        SmallField(table, 6, "LVPWd:", ukg.LVPWd);
+                        SmallField(table, 2, "LVPWs:", ukg.Lvpws);
+                        SmallField(table, 6, "LVPWd:", ukg.Lvpwd);
 
-                        Field(table, "EF:", ukg.EF);
+                        Field(table, "EF:", ukg.Ef);
                         Field(table, "Kurczliwość:", ukg.Kurczliwosc);
                         Field(table, "Osierdzie:", ukg.Osierdzie);
                         Field(table, "Zastawka mitralna:", ukg.ZastawkaMitralna);

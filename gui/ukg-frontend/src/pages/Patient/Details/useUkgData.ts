@@ -1,10 +1,11 @@
 import useGetUkgList, { UkgListItem } from "@/queries/useGetUkgList";
 import { useState } from "react";
 import { TableProps } from "antd";
+import { defaultPageSize } from "@/utility/table";
 
 export const useUkgData = (patientId?: string) => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(defaultPageSize);
 
   const {
     data: { data, total },

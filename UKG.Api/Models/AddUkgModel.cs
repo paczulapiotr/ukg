@@ -4,16 +4,16 @@ public record AddUkgModel
 {
     public required string PatientID { get; set; }
     public string? Ao { get; set; }
-    public string? ACS { get; set; }
-    public string? LA { get; set; }
-    public string? RV { get; set; }
-    public string? LVs { get; set; }
-    public string? LVd { get; set; }
-    public string? IVSs { get; set; }
-    public string? IVSd { get; set; }
-    public string? LVPWs { get; set; }
-    public string? LVPWd { get; set; }
-    public string? EF { get; set; }
+    public string? Acs { get; set; }
+    public string? La { get; set; }
+    public string? Rv { get; set; }
+    public string? Lvs { get; set; }
+    public string? Lvd { get; set; }
+    public string? Ivss { get; set; }
+    public string? Ivsd { get; set; }
+    public string? Lvpws { get; set; }
+    public string? Lvpwd { get; set; }
+    public string? Ef { get; set; }
     public string? Kurczliwosc { get; set; }
     public string? Osierdzie { get; set; }
     public string? ZastawkaMitralna { get; set; }

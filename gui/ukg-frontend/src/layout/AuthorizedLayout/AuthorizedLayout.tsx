@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   UserOutlined,
   SearchOutlined,
@@ -91,11 +91,6 @@ const AuthorizedLayout: React.FC = () => {
   } = theme.useToken();
 
   const items = useMenuItems();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    navigate("/ukg");
-  }, []);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -109,9 +104,9 @@ const AuthorizedLayout: React.FC = () => {
         <div className="demo-logo-vertical" />
         <Menu
           theme="light"
-          defaultSelectedKeys={["ukg_search"]}
           mode="inline"
           items={items}
+          defaultOpenKeys={["patient", "user"]}
         />
       </Sider>
       <Layout className={styles.layout}>

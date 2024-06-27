@@ -3,4 +3,4 @@ export const formLayout = {
   wrapperCol: { span: 16 },
 };
 
-export const formStyle = { minWidth: "600px", flex: 1 };
+export const formStyle = { width: "100%", flex: 1 };

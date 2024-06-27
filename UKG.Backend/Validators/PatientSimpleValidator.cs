@@ -44,9 +44,9 @@ public class PatientSimpleValidator : AbstractValidator<PatientSimple>
         return calculatedCheckDigit == lastDigit;
     }
 
-    private async Task<bool> ValidatePeselUniqueness(string pesel, CancellationToken cancellationToken)
+    private async Task<bool> ValidatePeselUniqueness(PatientSimple record, string pesel, CancellationToken cancellationToken)
     {
-        var isUnique = !await _patientRepository.Query().AnyAsync(x => x.Pesel == pesel, cancellationToken);
+        var isUnique = !await _patientRepository.Query().AnyAsync(x => x.Pesel == pesel && x.ID != record.Id, cancellationToken);
 
         return isUnique;
     }

@@ -1,55 +1,51 @@
-import { formLayout, formStyle } from "@/common/form";
-import Container from "@/components/common/Container";
-import { PatientForm } from "@/models";
-import { Divider, Flex, Form, Typography } from "antd";
-import FormItems from "../Upsert/FormItems";
+import { PatientFormModel } from "@/models";
+import { Button, Divider, Flex, Form, Typography } from "antd";
 import dayjs from "dayjs";
-import { useParams } from "react-router-dom";
-import styles from "./Details.module.scss";
+import { useNavigate, useParams } from "react-router-dom";
 import useGetPatient from "@/queries/useGetPatient";
 import UkgSection from "./UkgSection/UkgSection";
+import PageTitle from "@/components/common/PageTitle/PageTitle";
+import { EditOutlined } from "@ant-design/icons";
+import PatientForm from "@/components/PatientForm/PatientForm";
+import LoadingPage from "@/pages/common/LoadingPage";
 
 const Details = () => {
-  const [form] = Form.useForm<PatientForm>();
-  const { id } = useParams<{ id: string }>();
-  const { data: patient, isLoading } = useGetPatient(id);
+  const [form] = Form.useForm<PatientFormModel>();
+  const { patientId } = useParams<{ patientId: string }>();
+  const { data: patient, isFetching } = useGetPatient(patientId);
+  const navigate = useNavigate();
 
-  const patientForm: PatientForm | undefined =
+  const patientForm: PatientFormModel | undefined =
     patient == null
       ? undefined
       : {
-          BirthdayDate: dayjs(patient.birthday),
-          FirstName: patient.firstName,
-          LastName: patient.lastName,
-          Pesel: patient.pesel,
-          ID: patient.id,
+          birthdayDate: dayjs(patient.birthday),
+          firstName: patient.firstName,
+          lastName: patient.lastName,
+          pesel: patient.pesel,
+          id: patient.id,
         };
 
-  return (
+  return isFetching ? (
+    <LoadingPage />
+  ) : (
     <Flex vertical flex={1}>
-      {isLoading ? (
-        <Typography.Text>{"Ładowanie..."}</Typography.Text>
-      ) : (
-        <>
-          <section>
-            <Form
-              {...formLayout}
-              className={styles.readonly}
-              initialValues={patientForm}
-              disabled={true}
-              form={form}
-              name="add-patient"
-              style={formStyle}
+      <>
+        <Flex vertical gap={"1rem"}>
+          <Flex justify="space-between">
+            <PageTitle title={"Szczegóły pacjenta"} returnTo={`/patient`} />
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => navigate(`/patient/${patientId}/edit`)}
             >
-              <Container name={"details"}>
-                <FormItems readonly />
-              </Container>
-            </Form>
-            <Divider />
-          </section>
-          <UkgSection id={id!} />
-        </>
-      )}
+              {"Edytuj"}
+            </Button>
+          </Flex>
+          <PatientForm readonly form={form} patient={patientForm} />
+        </Flex>
+        <Divider />
+        <UkgSection patientId={patientId!} />
+      </>
     </Flex>
   );
 };

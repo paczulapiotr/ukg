@@ -1,0 +1,19 @@
+.readonly-form {
+  .ant-input-disabled {
+    background-color: #ffffff;
+    border-color: #333;
+    color: #333;
+    cursor: initial;
+  }
+
+  .ant-picker-disabled {
+    border-color: #333;
+    background-color: #ffffff;
+    cursor: initial;
+
+    input {
+      color: #333 !important;
+      cursor: initial !important;
+    }
+  }
+}

@@ -2,8 +2,12 @@ import { UkgListItem } from "@/queries/useGetUkgList";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { Table, TableProps, Typography } from "antd";
+import { Link } from "react-router-dom";
+import { formatDateTime } from "@/utility/date";
+import { defaultPageSize, pageSizes } from "@/utility/table";
 
 type Props = {
+  patientId: string;
   isLoading: boolean;
   total: number;
   data: UkgListItem[];
@@ -12,36 +16,8 @@ type Props = {
   onChange: TableProps<UkgListItem>["onChange"];
 };
 
-const columns: ColumnsType<UkgListItem> = [
-  {
-    title: "Data dodania",
-    dataIndex: "created",
-    key: "created",
-    render: (_, { created }) => dayjs(created).format("DD MMM YYYY"),
-    width: 150,
-  },
-  {
-    title: "Data aktualizacji",
-    dataIndex: "updated",
-    key: "updated",
-    width: 150,
-    render: (_, { updated }) =>
-      updated ? dayjs(updated).format("DD MMM YYYY") : "-",
-  },
-  {
-    title: "Podsumowanie",
-    dataIndex: "summary",
-    key: "summary",
-    ellipsis: true,
-    render: (_, { summary }) => (
-      <Typography.Text ellipsis title={summary}>
-        {summary}
-      </Typography.Text>
-    ),
-  },
-];
-
 const UkgTable = ({
+  patientId,
   isLoading,
   total,
   data,
@@ -49,6 +25,41 @@ const UkgTable = ({
   page,
   pageSize,
 }: Props) => {
+  const columns: ColumnsType<UkgListItem> = [
+    {
+      title: "Data dodania",
+      dataIndex: "created",
+      key: "created",
+      render: (_, { created, id }) => (
+        <Link to={`/patient/${patientId}/ukg/${id}`}>
+          {formatDateTime(dayjs(created))}
+        </Link>
+      ),
+      width: 170,
+      align: "center",
+    },
+    {
+      title: "Data aktualizacji",
+      dataIndex: "updated",
+      key: "updated",
+      width: 170,
+      render: (_, { updated }) =>
+        updated ? formatDateTime(dayjs(updated)) : "-",
+      align: "center",
+    },
+    {
+      title: "Podsumowanie",
+      dataIndex: "summary",
+      key: "summary",
+      ellipsis: true,
+      render: (_, { summary }) => (
+        <Typography.Text ellipsis title={summary}>
+          {summary}
+        </Typography.Text>
+      ),
+    },
+  ];
+
   return (
     <Table
       columns={columns}
@@ -58,7 +69,7 @@ const UkgTable = ({
         total,
         pageSize,
         current: page,
-        pageSizeOptions: [2, 5, 10, 20],
+        pageSizeOptions: pageSizes,
         showSizeChanger: true,
       }}
       onChange={onChange}

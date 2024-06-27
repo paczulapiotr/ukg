@@ -18,6 +18,46 @@ public class UkgSqlRepository : IUkgRepository
         await _ctx.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task Update(int id, UkgSummary ukgSummary, CancellationToken cancellationToken = default)
+    {
+        var ukg = await _ctx.UKGSummaries.FirstAsync(x => x.ID == id && x.SubmitterID == ukgSummary.SubmitterID, cancellationToken);
+
+        if (ukg is null) throw new InvalidOperationException($"Could not find UKG with id ${id}");
+
+        ukg.Ao = ukgSummary.Ao?.Trim();
+        ukg.ACS = ukgSummary.ACS?.Trim();
+        ukg.LA = ukgSummary.LA?.Trim();
+        ukg.RV = ukgSummary.RV?.Trim();
+        ukg.LVs = ukgSummary.LVs?.Trim();
+        ukg.LVd = ukgSummary.LVd?.Trim();
+        ukg.IVSs = ukgSummary.IVSs?.Trim();
+        ukg.IVSd = ukgSummary.IVSd?.Trim();
+        ukg.LVPWs = ukgSummary.LVPWs?.Trim();
+        ukg.LVPWd = ukgSummary.LVPWd?.Trim();
+        ukg.EF = ukgSummary.EF?.Trim();
+        ukg.Kurczliwosc = ukgSummary.Kurczliwosc?.Trim();
+        ukg.Osierdzie = ukgSummary.Osierdzie?.Trim();
+        ukg.ZastawkaMitralna = ukgSummary.ZastawkaMitralna?.Trim();
+        ukg.DopplerMitralna = ukgSummary.DopplerMitralna?.Trim();
+        ukg.VmaxMitralna = ukgSummary.VmaxMitralna?.Trim();
+        ukg.GmaxMitralna = ukgSummary.GmaxMitralna?.Trim();
+        ukg.ZastawkaAortalna = ukgSummary.ZastawkaAortalna?.Trim();
+        ukg.DopplerAortalna = ukgSummary.DopplerAortalna?.Trim();
+        ukg.VmaxAortalna = ukgSummary.VmaxAortalna?.Trim();
+        ukg.GmaxAortalna = ukgSummary.GmaxAortalna?.Trim();
+        ukg.ZastawkaTrojdzielna = ukgSummary.ZastawkaTrojdzielna?.Trim();
+        ukg.DopplerTrojdzielna = ukgSummary.DopplerTrojdzielna?.Trim();
+        ukg.VmaxTrojdzielna = ukgSummary.VmaxTrojdzielna?.Trim();
+        ukg.GmaxTrojdzielna = ukgSummary.GmaxTrojdzielna?.Trim();
+        ukg.ZastawkaPnia = ukgSummary.ZastawkaPnia?.Trim();
+        ukg.DopplerPnia = ukgSummary.DopplerPnia?.Trim();
+        ukg.Summary = ukgSummary.Summary?.Trim();
+        ukg.UpdatedAt = DateTime.UtcNow;
+
+        _ctx.Update(ukg);
+        await _ctx.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task Delete(int id, CancellationToken cancellationToken)
     {
         var ukg = await _ctx.UKGSummaries.FindAsync(id, cancellationToken);

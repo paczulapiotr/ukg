@@ -1,16 +1,15 @@
-import { useState } from "react";
 import Readonly from "./Readonly";
-import AddForm from "./AddForm";
+import { useNavigate } from "react-router-dom";
 
-type Props = { id: string };
+type Props = { patientId: string };
 
-const UkgSection = ({ id }: Props) => {
-  const [addState, setAddState] = useState(false);
-
-  return addState ? (
-    <AddForm id={id} onCancel={() => setAddState(false)} />
-  ) : (
-    <Readonly id={id} addNew={() => setAddState(true)} />
+const UkgSection = ({ patientId }: Props) => {
+  const navigate = useNavigate();
+  return (
+    <Readonly
+      patientId={patientId}
+      addNew={() => navigate(`/patient/${patientId}/ukg/add`)}
+    />
   );
 };
 

@@ -1,8 +1,10 @@
 @import "/src/styles/common.scss";
+@import "/src/styles/colors.scss";
 
 .label {
   background-color: white;
   @include border();
+  border-color: $primary-blue;
   padding: 0.2rem;
   height: 100%;
   line-height: 24px;
@@ -12,14 +14,23 @@
 .input {
   margin: 0;
 
+  :global(.ant-picker),
   :global(.ant-select-selector),
   textarea,
   input {
     @include border();
+    border-color: $primary-blue;
   }
 
   .ant-col {
     max-width: 100% !important;
+  }
+}
+
+.readonly {
+  border-color: #333;
+  input {
+    border-color: #333;
   }
 }
 

@@ -7,7 +7,7 @@ $grid-padding: 0.3rem;
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: $grid-padding;
-  border: 1px solid #333;
+  border: 1px solid $primary-blue;
   padding: $grid-padding;
   margin-bottom: 0.5rem;
   transition: background-color 0.5s ease;
@@ -27,4 +27,8 @@ $grid-padding: 0.3rem;
       border-color: $primary-blue;
     }
   }
+}
+
+.readonly {
+  border-color: #333;
 }

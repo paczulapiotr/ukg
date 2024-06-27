@@ -39,6 +39,21 @@ namespace UKG.Storage.Repositories
         {
             return _ctx.Patients.AsNoTracking();
         }
+
+        public async Task Update(int patientId, Patient patient, CancellationToken cancellationToken = default)
+        {
+            var toUpdate = await _ctx.Patients.FirstAsync(x => x.ID == patientId && x.SubmitterID == patient.SubmitterID, cancellationToken);
+
+            if (toUpdate is null) throw new InvalidOperationException($"Could not find patient with id ${patientId}");
+
+            toUpdate.FirstName = patient.FirstName;
+            toUpdate.LastName = patient.LastName;
+            toUpdate.Pesel = patient.Pesel;
+            toUpdate.Birthday = patient.Birthday;
+
+            _ctx.Update(toUpdate);
+            await _ctx.SaveChangesAsync(cancellationToken);
+        }
     }
 }
 

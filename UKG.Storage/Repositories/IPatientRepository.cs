@@ -5,6 +5,7 @@ namespace UKG.Storage.Repositories;
 public interface IPatientRepository
 {
     Task Add(Patient patient, CancellationToken cancellationToken = default);
+    Task Update(int patientId, Patient patient, CancellationToken cancellationToken = default);
     Task Delete(int id, CancellationToken cancellationToken);
     Task<Patient?> FindOneByID(int id, int submitterId, CancellationToken cancellationToken = default);
     IQueryable<Patient> Query();
