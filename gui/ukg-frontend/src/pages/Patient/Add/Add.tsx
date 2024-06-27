@@ -30,13 +30,11 @@ const Add = () => {
     <Flex vertical flex={1} gap={"1rem"}>
       <PageTitle title={"Dodaj pacjenta"} returnTo={`/patient/`} />
       <PatientForm form={form} onFinish={onFinish} />
-      <Flex justify="flex-end">
-        <Space>
-          <Button onClick={() => navigate("/patient")}>{"Anuluj"}</Button>
-          <Button type="primary" onClick={form.submit}>
-            {"Zapisz"}
-          </Button>
-        </Space>
+      <Flex justify="flex-end" align="flex-end" flex={1} gap={"1rem"}>
+        <Button onClick={() => navigate("/patient")}>{"Anuluj"}</Button>
+        <Button type="primary" onClick={form.submit}>
+          {"Zapisz"}
+        </Button>
       </Flex>
     </Flex>
   );

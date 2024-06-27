@@ -15,6 +15,7 @@ import styles from "./AuthorizedLayout.module.scss";
 import Router from "./Router";
 import { Footer } from "../Footer";
 import { useAuth } from "../../auth/AuthProvider/useAuth";
+import HeaderContent from "./HeaderContent";
 
 const { Header, Content, Sider } = Layout;
 
@@ -110,7 +111,9 @@ const AuthorizedLayout: React.FC = () => {
         />
       </Sider>
       <Layout className={styles.layout}>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+          <HeaderContent />
+        </Header>
         <Content style={{ margin: "1rem" }}>
           <div
             style={{

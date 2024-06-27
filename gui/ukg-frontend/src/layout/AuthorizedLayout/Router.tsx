@@ -6,11 +6,13 @@ import { Details as PatientDetailsPage } from "@/pages/Patient/Details";
 import { Details as UkgDetailsPage } from "@/pages/Ukg/Details";
 import { Add as AddUkgPage } from "@/pages/Ukg/Add";
 import { Home as HomePage } from "@/pages/Home";
+import { Settings as SettingsPage } from "@/pages/Settings";
 
 const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="/patient" element={<SearchPatientsPage />} />
       <Route path="/patient/add" element={<AddPatientPage />} />
       <Route path="/patient/:patientId/edit" element={<EditPatientPage />} />
