@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { save } from "@tauri-apps/api/dialog";
 import { writeBinaryFile } from "@tauri-apps/api/fs";
 import instance from "@/services/api";
+import { invoke } from "@tauri-apps/api";
 
 type Props = {
   children?: React.ReactNode;
@@ -35,8 +36,18 @@ const DownloadButton = ({ icon, children, url, fileName }: Props) => {
           if (!path) {
             resolve(false);
           } else {
-            // Use Tauri's writeFile API to save the PDF
-            await writeBinaryFile(path, buffer as ArrayBuffer);
+            try {
+              // Save file to local storage
+              await writeBinaryFile(path, buffer as ArrayBuffer);
+              // Open the file after it has been saved
+              await invoke("open_file", { pathy: path });
+            } catch (error) {
+              console.error(error);
+              resolve(false);
+
+              return;
+            }
+
             resolve(true);
           }
         };

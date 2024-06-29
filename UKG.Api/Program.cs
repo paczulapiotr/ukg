@@ -16,6 +16,7 @@ using UKG.Backend.Validators;
 using UKG.Api.Filters;
 using UKG.Backend.PDF;
 using QuestPDF.Infrastructure;
+using UKG.Backend.CSV;
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -28,6 +29,7 @@ builder.Services.AddTransient<IUkgRepository, UkgSqlRepository>();
 builder.Services.AddTransient<IPatientRepository, PatientSqlRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IPDFBuilder, PDFBuilder>();
+builder.Services.AddTransient<ICsvBuilder, CsvBuilder>();
 builder.Services.AddValidatorsFromAssemblies(new List<Assembly> { typeof(Program).Assembly, typeof(ValidationMessages).Assembly });
 builder.Services.AddAutoMapper(c =>
 {
@@ -111,7 +113,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors();

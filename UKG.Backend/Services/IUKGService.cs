@@ -15,4 +15,5 @@ public interface IUkgService
     Task Delete(int id, CancellationToken cancellationToken = default);
     Task DeletePatient(int id, CancellationToken cancellationToken);
     Task<byte[]> GenerateUkgPdf(int ukgId, CancellationToken cancellationToken);
+    Task<byte[]> ExportUkgsToCsv(CancellationToken cancellationToken);
 }

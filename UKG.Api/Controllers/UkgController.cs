@@ -77,5 +77,13 @@ public class UkgController : ControllerBase
 
         return File(pdf, "application/pdf");
     }
+
+    [HttpGet("export")]
+    public async Task<ActionResult> Export(CancellationToken cancellationToken = default)
+    {
+        var csv = await _ukgService.ExportUkgsToCsv(cancellationToken);
+
+        return File(csv, "text/csv");
+    }
 }
 

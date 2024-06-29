@@ -6,6 +6,7 @@ using UKG.Storage.Models;
 using FluentValidation;
 using UKG.Backend.Exceptions;
 using UKG.Backend.PDF;
+using UKG.Backend.CSV;
 
 namespace UKG.Backend.Services;
 
@@ -17,6 +18,7 @@ public class UkgService : IUkgService
     private readonly IValidator<PatientSimple> _patientValidator;
     private readonly IAuthService _authService;
     private readonly IPDFBuilder _pdfBuilder;
+    private readonly ICsvBuilder _csvBuilder;
 
     public UkgService(
         IUkgRepository ukgRepository,
@@ -24,7 +26,8 @@ public class UkgService : IUkgService
         IMapper mapper,
         IValidator<PatientSimple> patientValidator,
         IAuthService authService,
-        IPDFBuilder pdfBuilder)
+        IPDFBuilder pdfBuilder,
+        ICsvBuilder csvBuilder)
     {
         _ukgRepository = ukgRepository;
         _patientRepository = patientRepository;
@@ -32,6 +35,7 @@ public class UkgService : IUkgService
         _patientValidator = patientValidator;
         _authService = authService;
         _pdfBuilder = pdfBuilder;
+        _csvBuilder = csvBuilder;
     }
 
     public async Task<int> Add(Models.UkgSummary ukgSummary, CancellationToken cancellationToken = default)
@@ -185,5 +189,16 @@ public class UkgService : IUkgService
         u.SubmitterName = user.FullName;
 
         return await _pdfBuilder.Create(p, u, cancellationToken);
+    }
+
+    public async Task<byte[]> ExportUkgsToCsv(CancellationToken cancellationToken)
+    {
+        var submitterId = _authService.GetID();
+        var ukgQuery = _ukgRepository.Query()
+            .Include(u => u.Patient)
+            .Where(x => x.SubmitterID == submitterId)
+            .OrderByDescending(x => x.CreatedAt);
+
+        return await _csvBuilder.CreateCsv(ukgQuery, new UkgSummaryClassMap());
     }
 }

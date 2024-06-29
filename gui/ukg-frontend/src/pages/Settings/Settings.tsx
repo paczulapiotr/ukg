@@ -1,4 +1,8 @@
-import { Flex, Form, Typography } from "antd";
+import { DownloadButton } from "@/components/common/DownloadButton";
+import { Divider, Flex, Typography } from "antd";
+import { FileOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import { formatCompressedDateTime } from "@/utility/date";
 
 const Settings = () => {
   return (
@@ -6,7 +10,17 @@ const Settings = () => {
       <Typography.Title level={4} style={{ margin: 0 }}>
         {"Ustawienia"}
       </Typography.Title>
-      <Form layout="vertical"></Form>
+      <Divider />
+      <Flex>
+        <DownloadButton
+          icon={<FileOutlined />}
+          url={`/ukg/export`}
+          fileName={`Export_${formatCompressedDateTime(dayjs())}.csv`}
+        >
+          {"Eksportuj dane do CSV"}
+        </DownloadButton>
+      </Flex>
+      <Divider />
     </Flex>
   );
 };
