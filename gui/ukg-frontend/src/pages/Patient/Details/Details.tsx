@@ -1,5 +1,5 @@
 import { PatientFormModel } from "@/models";
-import { Button, Divider, Flex, Form, Typography } from "antd";
+import { Button, Divider, Flex, Form } from "antd";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 import useGetPatient from "@/queries/useGetPatient";

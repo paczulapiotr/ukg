@@ -1,6 +1,6 @@
 import { PatientFormModel } from "@/models";
 import useAddPatient from "@/queries/useAddPatient";
-import { Button, Flex, Form, Space, message } from "antd";
+import { Button, Flex, Form, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import PageTitle from "@/components/common/PageTitle/PageTitle";
 import PatientForm from "@/components/PatientForm/PatientForm";

@@ -1,5 +1,4 @@
 import { PatientFormModel } from "@/models";
-import useAddPatient from "@/queries/useAddPatient";
 import { Button, Flex, Form, Space, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import useGetPatient from "@/queries/useGetPatient";

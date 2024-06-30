@@ -4,7 +4,6 @@ import FormItems from "./FormItems";
 import Container from "@/components/common/Container";
 import { useState } from "react";
 import { PatientFormModel } from "@/models";
-import styles from "./PatientForm.module.scss";
 import classNames from "classnames";
 
 type Props = {

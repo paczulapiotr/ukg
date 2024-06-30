@@ -1,4 +1,4 @@
-import { Divider, Flex, Form, Typography } from "antd";
+import { Divider, Flex, Form } from "antd";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 import useGetPatient from "@/queries/useGetPatient";
