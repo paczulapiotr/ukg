@@ -20,7 +20,14 @@ using UKG.Backend.CSV;
 
 QuestPDF.Settings.License = LicenseType.Community;
 
-var builder = WebApplication.CreateBuilder(args);
+var basePath = AppContext.BaseDirectory;
+
+var builder = WebApplication.CreateBuilder(
+    new WebApplicationOptions
+    {
+        Args = args,
+        ContentRootPath = basePath,
+    });
 
 // Add services to the container.
 builder.Services.AddTransient<ClaimsPrincipal>(sp => sp.GetRequiredService<IHttpContextAccessor>().HttpContext?.User!);
@@ -54,7 +61,7 @@ builder.Services.AddCors(opts =>
                     .AllowAnyHeader()
                     .AllowCredentials());
 });
-var dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var dbConnectionString = $"Data Source={Path.Combine(basePath, "ukg_database.sqlite")}";
 builder.Services.AddDbContext<UkgDbContext>(opts
     => opts.UseSqlite(dbConnectionString));
 
@@ -100,6 +107,14 @@ builder.Services.AddAuthorization();
 
 // Build
 var app = builder.Build();
+
+// Get the logger
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+// Log the base path
+logger.LogInformation("Application base path: {BasePath}", basePath);
+logger.LogInformation("Connection string: {DbConnectionString}", dbConnectionString);
+logger.LogInformation("Environment: {EnvironmentName}", app.Environment.EnvironmentName);
 
 // Migrate the contexts
 using (var scope = app.Services.CreateScope())

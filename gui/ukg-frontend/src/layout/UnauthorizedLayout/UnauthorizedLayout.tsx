@@ -62,7 +62,8 @@ const UnauthorizedLayout = () => {
                 placeholder="Hasło"
               />
             </Form.Item>
-            <Flex justify="flex-end">
+            <Flex justify="space-between">
+              <Button>{"Zarejestruj się"}</Button>
               <Button type="primary" htmlType="submit">
                 {"Zaloguj"}
               </Button>
