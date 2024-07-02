@@ -35,7 +35,7 @@ fn main() {
 }
 
 fn start_backend() -> Child {
-    let backend_executable = "./bin/UKG.Api";
+    let backend_executable = "./server/UKG.Api";
 
     let backend_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(backend_executable);
 

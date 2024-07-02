@@ -6,8 +6,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "ukg-frontend",
-    "version": "0.0.0"
+    "productName": "ukg-application",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -47,7 +47,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "ukg-frontend",
+        "title": "Badania UKG",
         "width": 1280,
         "height": 720
       }
