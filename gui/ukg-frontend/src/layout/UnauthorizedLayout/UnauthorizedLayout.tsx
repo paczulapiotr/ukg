@@ -63,7 +63,7 @@ const UnauthorizedLayout = () => {
               />
             </Form.Item>
             <Flex justify="space-between">
-              <Button>{"Zarejestruj się"}</Button>
+              <Button>{"Utwórz konto"}</Button>
               <Button type="primary" htmlType="submit">
                 {"Zaloguj"}
               </Button>

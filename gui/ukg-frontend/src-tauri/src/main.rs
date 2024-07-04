@@ -5,24 +5,35 @@ use std::path::Path;
 use std::process::Command;
 use tauri::command;
 
-use std::path::PathBuf;
 use std::process::Child;
 use std::sync::{Arc, Mutex};
-use tauri::{Manager, WindowEvent};
+use tauri::{api::path::resource_dir, Manager, WindowEvent};
 
 fn main() {
-    let backend_process = Arc::new(Mutex::new(start_backend()));
+    let backend_process = Arc::new(Mutex::new(None)); // Initialize with None
 
     tauri::Builder::default()
         .setup(move |app| {
             let main_window = app.get_window("main").unwrap();
+            let package_info = app.package_info().clone();
+            let env = app.env();
+
+            // Start backend and store the Child process
+            let backend_child = start_backend(&package_info, &env);
             let backend_process_clone = Arc::clone(&backend_process);
+
+            if let Ok(mut backend_guard) = backend_process_clone.lock() {
+                *backend_guard = Some(backend_child);
+            }
+
             main_window.on_window_event(move |event| {
                 if let WindowEvent::CloseRequested { api, .. } = event {
                     api.prevent_close();
-                    // Now we can borrow `backend_process` as mutable safely across threads
-                    if let Ok(mut child) = backend_process_clone.lock() {
-                        stop_backend(&mut *child);
+                    // Stop the backend process before exiting
+                    if let Ok(mut backend_guard) = backend_process.lock() {
+                        if let Some(child) = backend_guard.as_mut() {
+                            stop_backend(child);
+                        }
                     }
                     std::process::exit(0); // Exit the application
                 }
@@ -34,14 +45,39 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-fn start_backend() -> Child {
-    let backend_executable = "./server/UKG.Api";
+fn start_backend(package_info: &tauri::PackageInfo, env: &tauri::Env) -> Child {
+    #[cfg(target_os = "windows")]
+    let backend_executable = "server/Ukg.Api.exe";
+    #[cfg(target_os = "macos")]
+    let backend_executable = "server/UKG.Api";
+    #[cfg(target_os = "linux")]
+    let backend_executable = "server/UKG.Api";
 
-    let backend_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(backend_executable);
+    let resource_dir = resource_dir(package_info, env).expect("failed to get resource directory");
+    let backend_path = resource_dir.join(backend_executable);
 
-    Command::new(backend_path)
-        .spawn()
-        .expect("failed to start backend process")
+    // Hide console for release
+    let mut command = Command::new(backend_path);
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        command
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .stdin(std::process::Stdio::null());
+    }
+
+    command.spawn().expect("failed to start backend process")
+
+    // Show console for debugging
+    // Command::new(backend_path)
+    //     .spawn()
+    //     .expect("failed to start backend process")
 }
 
 fn stop_backend(child: &mut Child) {
