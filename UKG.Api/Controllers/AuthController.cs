@@ -37,22 +37,7 @@ public class AuthenticateController : ControllerBase
         var user = await _userManager.FindByNameAsync(model.Username);
         if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
         {
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var authClaims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("username", user.UserName ?? ""),
-                new Claim(ClaimTypes.Name, user.UserName ?? ""),
-                new Claim(JwtRegisteredClaimNames.Name, user.FullName ?? ""),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            };
-
-            foreach (var userRole in userRoles)
-            {
-                authClaims.Add(new Claim(ClaimTypes.Role, userRole));
-            }
-
+            var authClaims = await GenerateClaims(user);
             var token = CreateToken(authClaims);
             var refreshToken = GenerateRefreshToken();
 
@@ -74,6 +59,27 @@ public class AuthenticateController : ControllerBase
         return Unauthorized();
     }
 
+    private async Task<List<Claim>> GenerateClaims(AppUser? user)
+    {
+        var userRoles = await _userManager.GetRolesAsync(user);
+
+        var authClaims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim("username", user.UserName ?? ""),
+                new Claim(ClaimTypes.Name, user.UserName ?? ""),
+                new Claim(JwtRegisteredClaimNames.Name, user.FullName ?? ""),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+        foreach (var userRole in userRoles)
+        {
+            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+        }
+
+        return authClaims;
+    }
+
     [HttpPost]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -82,10 +88,14 @@ public class AuthenticateController : ControllerBase
         if (userExists != null)
             return StatusCode(StatusCodes.Status500InternalServerError, "User already exists!");
 
+        if(model.Password != model.RepeatPassword)
+            return StatusCode(StatusCodes.Status500InternalServerError, "Passwords are not matching!");
+
         AppUser user = new()
         {
             SecurityStamp = Guid.NewGuid().ToString(),
-            UserName = model.Username
+            UserName = model.Username,
+            FullName = model.FullName,
         };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (!result.Succeeded)
@@ -122,7 +132,8 @@ public class AuthenticateController : ControllerBase
             return BadRequest("Invalid access token or refresh token");
         }
 
-        var newAccessToken = CreateToken(principal.Claims.ToList());
+        var authClaims = await GenerateClaims(user);
+        var newAccessToken = CreateToken(authClaims);
         var newRefreshToken = GenerateRefreshToken();
 
         user.RefreshToken = newRefreshToken;
@@ -141,11 +152,54 @@ public class AuthenticateController : ControllerBase
     [Route("logout")]
     public async Task<IActionResult> Logout()
     {
-        var ctx = this.HttpContext;
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
         if (user == null) return BadRequest("Invalid user name");
 
         user.RefreshToken = null;
+        await _userManager.UpdateAsync(user);
+
+        return NoContent();
+    }
+
+
+    [HttpPut]
+    [Authorize]
+    [Route("password")]
+    public async Task<IActionResult> ChangePasssword(UpdatePasswordModel model)
+    {
+        if(model.NewPassword != model.RepeatPassword)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Passwords are not matching!");
+        }
+
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+        IdentityResult result;
+        if(model.CurrentPassword == "ADMIN")
+        {
+            await _userManager.RemovePasswordAsync(user);
+            result =  await _userManager.AddPasswordAsync(user, model.NewPassword);
+        }
+        else
+        {
+            result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        }
+        
+        if(!result.Succeeded)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, string.Join(", ", result.Errors));
+        }
+
+        return NoContent();
+    }
+
+    [HttpPut]
+    [Authorize]
+    [Route("user")]
+    public async Task<IActionResult> UpdateUser(UpdateUserModel model)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        user.FullName = model.FullName;
         await _userManager.UpdateAsync(user);
 
         return NoContent();

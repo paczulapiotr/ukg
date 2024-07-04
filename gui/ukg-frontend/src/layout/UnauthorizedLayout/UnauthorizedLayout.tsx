@@ -1,22 +1,27 @@
 // Import necessary modules from antd and React
-import { Form, Input, Button, Layout, Flex } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Button, Layout, Flex, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { useAuth } from "../../auth/AuthProvider/useAuth";
 import { Footer } from "../Footer";
 import LoginDoctorSvg from "@/assets/login_doctor.svg";
-type LoginModel = {
-  username: string;
-  password: string;
-};
+import LoginForm, { LoginModel } from "./LoginForm";
+import RegisterForm, { RegisterModel } from "./RegisterForm";
+import { useState } from "react";
+
 const { Content } = Layout;
 
 const UnauthorizedLayout = () => {
-  const [form] = useForm<LoginModel>();
-  const { login } = useAuth();
+  const [formMode, setFormMode] = useState<"login" | "register">("login");
+  const [loginForm] = useForm<LoginModel>();
+  const [registerForm] = useForm<RegisterModel>();
 
-  const onFinish = ({ username, password }: LoginModel) => {
-    login(username, password);
+  const switchToRegister = () => {
+    registerForm.resetFields();
+    setFormMode("register");
+  };
+
+  const switchToLogin = () => {
+    loginForm.resetFields();
+    setFormMode("login");
   };
 
   return (
@@ -43,32 +48,36 @@ const UnauthorizedLayout = () => {
             padding: "20px",
             borderRadius: "10px",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            minWidth: "300px",
           }}
         >
-          <Form onFinish={onFinish} form={form}>
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: "Wprowadź swój login" }]}
-            >
-              <Input prefix={<UserOutlined />} placeholder="Login" />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: "Wprowadź swoje hasło" }]}
-            >
-              <Input
-                prefix={<LockOutlined />}
-                type="password"
-                placeholder="Hasło"
-              />
-            </Form.Item>
-            <Flex justify="space-between">
-              <Button>{"Utwórz konto"}</Button>
-              <Button type="primary" htmlType="submit">
-                {"Zaloguj"}
-              </Button>
-            </Flex>
-          </Form>
+          {formMode === "login" ? (
+            <>
+              <Typography.Title style={{ marginTop: 0 }} level={4}>
+                {"Logowanie"}
+              </Typography.Title>
+              <LoginForm form={loginForm} />
+              <Flex justify="space-between">
+                <Button onClick={switchToRegister}>{"Utwórz konto"}</Button>
+                <Button type="primary" onClick={loginForm.submit}>
+                  {"Zaloguj"}
+                </Button>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Typography.Title style={{ marginTop: 0 }} level={4}>
+                {"Tworzenie konta"}
+              </Typography.Title>
+              <RegisterForm form={registerForm} onRegistered={switchToLogin} />
+              <Flex justify="space-between">
+                <Button onClick={switchToLogin}>{"Anuluj"}</Button>
+                <Button type="primary" onClick={registerForm.submit}>
+                  {"Utwórz konto"}
+                </Button>
+              </Flex>
+            </>
+          )}
         </div>
       </Content>
       <Footer />

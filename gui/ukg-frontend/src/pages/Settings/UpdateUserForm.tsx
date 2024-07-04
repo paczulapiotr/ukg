@@ -1,25 +1,35 @@
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, message } from "antd";
 import { useState } from "react";
-import { LockOutlined } from "@ant-design/icons";
+import ChangePasswordButton from "./ChangePasswordButton";
+import { useAuth } from "@/auth/AuthProvider/useAuth";
+import instance from "@/services/api";
 export type UpdateDoctorModel = {
-  id: string;
   login: string;
   fullName: string;
 };
 
-type Props = {
-  onFinished: (value: UpdateDoctorModel) => Promise<void>;
-  initialValues: UpdateDoctorModel;
-};
-
-const UpdateUserForm = ({ onFinished, initialValues }: Props) => {
+const UpdateUserForm = () => {
+  const { auth, refreshToken } = useAuth();
   const [form] = Form.useForm();
   const [edit, setEdit] = useState(false);
+
   const onCancel = () => {
     setEdit(false);
     form.resetFields();
   };
-  const onChangePassword = () => {};
+
+  const onFinished = async (values: UpdateDoctorModel) => {
+    try {
+      await instance.put("/auth/user", { fullName: values.fullName });
+      await refreshToken();
+      form.setFieldValue("fullName", values.fullName);
+      setEdit(false);
+      message.success("Pomyślnie zaktualizowano dane");
+    } catch (err) {
+      console.error(err);
+      message.error("Wystąpił błąd podczas aktualizacji danych");
+    }
+  };
 
   return (
     <Flex vertical gap={"1rem"}>
@@ -28,18 +38,31 @@ const UpdateUserForm = ({ onFinished, initialValues }: Props) => {
         form={form}
         layout="vertical"
         onFinish={onFinished}
-        initialValues={initialValues}
+        initialValues={{
+          login: auth.user?.username ?? "",
+          fullName: auth.user?.fullName ?? "",
+        }}
       >
-        <Form.Item name="id" hidden>
-          <Input disabled />
-        </Form.Item>
-        <Form.Item name="login" label="Login">
+        <Form.Item name="login" label="Login" required>
           <Input disabled />
         </Form.Item>
         <Form.Item
           name="fullName"
           label="Tytuł / Imie / Nazwisko"
-          rules={[{ required: true }]}
+          rules={[
+            {
+              required: true,
+              message: "Wprowadź swój tytuł, imię i nazwisko",
+            },
+            {
+              min: 3,
+              message: "Minimalna długość to 3 znaki",
+            },
+            {
+              max: 100,
+              message: "Maksymalna długość to 100 znaków",
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -54,9 +77,7 @@ const UpdateUserForm = ({ onFinished, initialValues }: Props) => {
           </>
         ) : (
           <>
-            <Button onClick={onChangePassword} icon={<LockOutlined />}>
-              {"Zmień hasło"}
-            </Button>
+            <ChangePasswordButton />
             <Button onClick={() => setEdit(true)}>{"Edytuj"}</Button>
           </>
         )}

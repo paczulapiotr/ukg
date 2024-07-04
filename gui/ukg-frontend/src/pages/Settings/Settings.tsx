@@ -14,14 +14,7 @@ const Settings = () => {
       <Typography.Title level={5} style={{ margin: 0 }}>
         {"Edytuj profil"}
       </Typography.Title>
-      <UpdateUserForm
-        initialValues={{
-          login: "wojciech.czapla",
-          fullName: "dr n.med. Wojciech Czapla",
-          id: "1",
-        }}
-        onFinished={async () => {}}
-      />
+      <UpdateUserForm />
       <Flex flex={1} align="flex-end" justify="flex-end" vertical>
         <Divider />
         <DownloadButton

@@ -3,17 +3,35 @@ import { Authorization, authContext } from "./authContext";
 import instance from "../../services/api";
 import { AuthorizedResponse } from "./types";
 import { mapAuthToContext } from "./utility";
+import { AuthApi } from "@/services/auth";
 
 type UseAuthResult = {
   auth: Authorization;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<LoginResult>;
   logout: () => Promise<void>;
+  refreshToken: () => Promise<void>;
+  register: (
+    fullName: string,
+    username: string,
+    password: string,
+    repeatPassword: string
+  ) => Promise<boolean>;
 };
+
+export type LoginResult =
+  | "success"
+  | "incorrect_credentials"
+  | "internal_error";
 
 export const useAuth = (): UseAuthResult => {
   const { ctx, setCtx } = useContext(authContext);
 
-  const login = async (username: string, password: string) => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<LoginResult> => {
+    let result: LoginResult = "internal_error";
+    let response: AuthorizedResponse | null = null;
     try {
       const { data, status } = await instance.post<AuthorizedResponse>(
         "auth/login",
@@ -22,12 +40,24 @@ export const useAuth = (): UseAuthResult => {
           password,
         }
       );
-      if (status !== 200)
-        throw new Error(`Error while logging in with status ${status}`);
-      setAuth(data);
-    } catch (err) {
+
+      if (status >= 200 && status < 300) {
+        response = data;
+        result = "success";
+      }
+    } catch (err: any) {
       console.log("Error while logging in", err);
-      setCtx(() => ({ isAuthorized: false, isLoading: false }));
+      if (err?.response?.status === 401) {
+        result = "incorrect_credentials";
+      }
+    } finally {
+      if (result === "success" && response) {
+        setAuth(response);
+      } else {
+        setCtx(() => ({ isAuthorized: false, isLoading: false }));
+      }
+
+      return result;
     }
   };
 
@@ -39,9 +69,38 @@ export const useAuth = (): UseAuthResult => {
     }
   };
 
+  const register = async (
+    fullName: string,
+    username: string,
+    password: string,
+    repeatPassword: string
+  ) => {
+    try {
+      await instance.post("auth/register", {
+        username,
+        fullName,
+        password,
+        repeatPassword,
+      });
+      return true;
+    } catch (err: any) {
+      console.log("Error while registering", err);
+      return false;
+    }
+  };
+
+  const refreshToken = async () => {
+    try {
+      const authorization = await AuthApi.refreshToken(ctx.refreshToken?.token);
+      setCtx(() => authorization);
+    } catch (err) {
+      setCtx(() => ({ isAuthorized: false, isLoading: false }));
+    }
+  };
+
   const setAuth = (response: AuthorizedResponse) => {
     setCtx(() => mapAuthToContext(response));
   };
 
-  return { login, logout, auth: ctx };
+  return { login, logout, register, refreshToken, auth: ctx };
 };
