@@ -56,10 +56,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(opts =>
 {
-    opts.AddDefaultPolicy(builder => builder.WithOrigins("http://localhost:1320")
+    opts.AddDefaultPolicy(builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
+                    .AllowAnyHeader());
 });
 var dbConnectionString = $"Data Source={Path.Combine(basePath, "ukg_database.sqlite")}";
 builder.Services.AddDbContext<UkgDbContext>(opts
@@ -79,6 +78,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole<int>>(c =>
     c.Password.RequiredUniqueChars = 0;
     c.Password.RequireNonAlphanumeric = false;
     c.Password.RequireUppercase = false;
+    c.Password.RequireLowercase = false;
+    c.Password.RequiredLength = 6;
 })
     .AddEntityFrameworkStores<AuthDbContext>();
 

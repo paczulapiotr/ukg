@@ -9,6 +9,7 @@ export type UpdateDoctorModel = {
 };
 
 const UpdateUserForm = () => {
+  const [submitting, setSubmitting] = useState(false);
   const { auth, refreshToken } = useAuth();
   const [form] = Form.useForm();
   const [edit, setEdit] = useState(false);
@@ -20,6 +21,7 @@ const UpdateUserForm = () => {
 
   const onFinished = async (values: UpdateDoctorModel) => {
     try {
+      setSubmitting(true);
       await instance.put("/auth/user", { fullName: values.fullName });
       await refreshToken();
       form.setFieldValue("fullName", values.fullName);
@@ -28,6 +30,8 @@ const UpdateUserForm = () => {
     } catch (err) {
       console.error(err);
       message.error("Wystąpił błąd podczas aktualizacji danych");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -70,8 +74,10 @@ const UpdateUserForm = () => {
       <Flex justify="end" gap={"1rem"}>
         {edit ? (
           <>
-            <Button onClick={onCancel}>{"Anuluj"}</Button>
-            <Button type="primary" onClick={form.submit}>
+            <Button onClick={onCancel} disabled={submitting}>
+              {"Anuluj"}
+            </Button>
+            <Button type="primary" onClick={form.submit} loading={submitting}>
               {"Zapisz"}
             </Button>
           </>

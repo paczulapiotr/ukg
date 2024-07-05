@@ -56,13 +56,14 @@ const UnauthorizedLayout = () => {
               <Typography.Title style={{ marginTop: 0 }} level={4}>
                 {"Logowanie"}
               </Typography.Title>
-              <LoginForm form={loginForm} />
-              <Flex justify="space-between">
-                <Button onClick={switchToRegister}>{"Utwórz konto"}</Button>
-                <Button type="primary" onClick={loginForm.submit}>
-                  {"Zaloguj"}
-                </Button>
-              </Flex>
+              <LoginForm form={loginForm}>
+                <Flex justify="space-between">
+                  <Button onClick={switchToRegister}>{"Utwórz konto"}</Button>
+                  <Button type="primary" htmlType="submit">
+                    {"Zaloguj"}
+                  </Button>
+                </Flex>
+              </LoginForm>
             </>
           ) : (
             <>

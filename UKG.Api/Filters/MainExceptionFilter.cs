@@ -20,7 +20,7 @@ public class MainExceptionFilter : IExceptionFilter
         if (context.Exception is MainException exception)
         {
             _logger.LogError("Exception with code {ErrorCode}: {ErrorMessage}", exception.ExceptionCode, exception.Message);
-            var response = new ErrorModel(new string[] { exception.ExceptionCode });
+            var response = new ErrorModel(exception.ExceptionCode);
 
             context.Result = new ObjectResult(response)
             {

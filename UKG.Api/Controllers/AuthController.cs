@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UKG.Api.Models.Auth;
 using UKG.Auth;
+using UKG.Backend.Exceptions;
 
 namespace UKG.Api.Controllers;
 
@@ -56,6 +57,7 @@ public class AuthenticateController : ControllerBase
                 RefreshTokenExpiration = user.RefreshTokenExpiryTime,
             });
         }
+
         return Unauthorized();
     }
 
@@ -86,22 +88,40 @@ public class AuthenticateController : ControllerBase
     {
         var userExists = await _userManager.FindByNameAsync(model.Username);
         if (userExists != null)
-            return StatusCode(StatusCodes.Status500InternalServerError, "User already exists!");
+            throw new MainException(ApiExceptionCodes.UserAlreadyExists, "User already exists!");
 
-        if(model.Password != model.RepeatPassword)
-            return StatusCode(StatusCodes.Status500InternalServerError, "Passwords are not matching!");
+        await ValidatePassword(model.Password, model.RepeatPassword);
 
-        AppUser user = new()
+        var user = new AppUser
         {
             SecurityStamp = Guid.NewGuid().ToString(),
             UserName = model.Username,
             FullName = model.FullName,
         };
         var result = await _userManager.CreateAsync(user, model.Password);
+
         if (!result.Succeeded)
-            return StatusCode(StatusCodes.Status500InternalServerError, "User creation failed! Please check user details and try again.");
+        {
+            throw new MainException(ApiExceptionCodes.UserCreationError, "User creation failed! Please check user details and try again.");
+        }
 
         return Ok("User created successfully!");
+    }
+
+    private async Task ValidatePassword(string password, string repeatPassword)
+    {
+        if (password != repeatPassword)
+            throw new MainException(ApiExceptionCodes.PasswordsNotMatching, "Passwords are not matching!");
+
+        var validationTasks = _userManager.PasswordValidators
+            .Select(x => x.ValidateAsync(_userManager, null, password));
+
+        await Task.WhenAll(validationTasks);
+
+        if (validationTasks.Any(vt => !vt.Result.Succeeded))
+        {
+            throw new MainException(ApiExceptionCodes.PasswordsFormatIncorrect, "Passwords are not matching!");
+        }
     }
 
     [HttpPost]
@@ -167,10 +187,7 @@ public class AuthenticateController : ControllerBase
     [Route("password")]
     public async Task<IActionResult> ChangePasssword(UpdatePasswordModel model)
     {
-        if(model.NewPassword != model.RepeatPassword)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Passwords are not matching!");
-        }
+        await ValidatePassword(model.NewPassword, model.RepeatPassword);
 
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
@@ -187,7 +204,7 @@ public class AuthenticateController : ControllerBase
         
         if(!result.Succeeded)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, string.Join(", ", result.Errors));
+            throw new MainException(ApiExceptionCodes.PasswordUpdateError, string.Join(", ", result.Errors));
         }
 
         return NoContent();

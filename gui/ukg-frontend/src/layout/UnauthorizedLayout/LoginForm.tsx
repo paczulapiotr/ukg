@@ -1,6 +1,7 @@
 import { useAuth } from "@/auth/AuthProvider/useAuth";
 import { Form, FormInstance, Input, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { PropsWithChildren } from "react";
 
 type Props = {
   form: FormInstance;
@@ -11,7 +12,7 @@ export type LoginModel = {
   password: string;
 };
 
-const LoginForm = ({ form }: Props) => {
+const LoginForm = ({ form, children }: PropsWithChildren<Props>) => {
   const { login } = useAuth();
 
   const onFinish = async ({ username, password }: LoginModel) => {
@@ -36,6 +37,7 @@ const LoginForm = ({ form }: Props) => {
       >
         <Input prefix={<LockOutlined />} type="password" placeholder="Hasło" />
       </Form.Item>
+      {children}
     </Form>
   );
 };

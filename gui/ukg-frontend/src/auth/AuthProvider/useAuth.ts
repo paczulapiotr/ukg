@@ -4,6 +4,7 @@ import instance from "../../services/api";
 import { AuthorizedResponse } from "./types";
 import { mapAuthToContext } from "./utility";
 import { AuthApi } from "@/services/auth";
+import { ApiErrorCodes, hasErrorCode } from "@/utility/axios";
 
 type UseAuthResult = {
   auth: Authorization;
@@ -15,7 +16,7 @@ type UseAuthResult = {
     username: string,
     password: string,
     repeatPassword: string
-  ) => Promise<boolean>;
+  ) => Promise<void>;
 };
 
 export type LoginResult =
@@ -82,10 +83,16 @@ export const useAuth = (): UseAuthResult => {
         password,
         repeatPassword,
       });
-      return true;
     } catch (err: any) {
-      console.log("Error while registering", err);
-      return false;
+      if (hasErrorCode(err, ApiErrorCodes.UserAlreadyExists)) {
+        throw ApiErrorCodes.UserAlreadyExists;
+      } else if (hasErrorCode(err, ApiErrorCodes.PasswordsNotMatching)) {
+        throw ApiErrorCodes.PasswordsNotMatching;
+      } else if (hasErrorCode(err, ApiErrorCodes.PasswordsFormatIncorrect)) {
+        throw ApiErrorCodes.PasswordsFormatIncorrect;
+      }
+
+      throw ApiErrorCodes.UserCreationError;
     }
   };
 

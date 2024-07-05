@@ -3,6 +3,7 @@ import { useState } from "react";
 import { LockOutlined } from "@ant-design/icons";
 import { useAuth } from "@/auth/AuthProvider/useAuth";
 import instance from "@/services/api";
+import { ApiErrorCodes, hasErrorCode } from "@/utility/axios";
 
 export type ChangePasswordModel = {
   currentPassword: string;
@@ -11,6 +12,7 @@ export type ChangePasswordModel = {
 };
 
 const ChangePasswordButton = () => {
+  const [submitting, setSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const { refreshToken } = useAuth();
@@ -26,6 +28,7 @@ const ChangePasswordButton = () => {
     repeatPassword,
   }: ChangePasswordModel) => {
     try {
+      setSubmitting(true);
       await instance.put("/auth/password", {
         currentPassword,
         newPassword,
@@ -34,9 +37,17 @@ const ChangePasswordButton = () => {
       await refreshToken();
       setOpen(false);
       message.success("Pomyślnie zaktualizowano hasło");
+      form.resetFields();
     } catch (err) {
-      console.error(err);
-      message.error("Wystąpił błąd podczas aktualizacji hasła");
+      if (hasErrorCode(err, ApiErrorCodes.PasswordsNotMatching)) {
+        message.error("Hasła nie są takie same");
+      } else if (hasErrorCode(err, ApiErrorCodes.PasswordsFormatIncorrect)) {
+        message.error("Hasło musi zawierać co najmniej 6 znaków");
+      } else {
+        message.error("Wystąpił błąd podczas aktualizacji hasla");
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -48,6 +59,7 @@ const ChangePasswordButton = () => {
         onCancel={onClose}
         okText="Aktualizuj"
         onOk={form.submit}
+        confirmLoading={submitting}
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item

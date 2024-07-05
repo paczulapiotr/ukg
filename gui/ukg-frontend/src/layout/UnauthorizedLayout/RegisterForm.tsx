@@ -1,6 +1,7 @@
 import { useAuth } from "@/auth/AuthProvider/useAuth";
 import { Form, FormInstance, Input, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { ApiErrorCodes } from "@/utility/axios";
 
 type Props = {
   form: FormInstance;
@@ -23,12 +24,20 @@ const RegisterForm = ({ form, onRegistered }: Props) => {
     password,
     repeatPassword,
   }: RegisterModel) => {
-    const result = await register(fullName, username, password, repeatPassword);
-    if (result) {
+    try {
+      await register(fullName, username, password, repeatPassword);
       message.success("Konto zostało utworzone");
       onRegistered();
-    } else {
-      message.error("Wystąpił błąd podczas tworzenia konta");
+    } catch (err) {
+      if (err === ApiErrorCodes.PasswordsNotMatching) {
+        message.error("Hasła nie są takie same");
+      } else if (err === ApiErrorCodes.UserAlreadyExists) {
+        message.error("Użytkownik już istnieje");
+      } else if (err === ApiErrorCodes.PasswordsFormatIncorrect) {
+        message.error("Hasło musi zawierać co najmniej 6 znaków");
+      } else {
+        message.error("Wystąpił błąd podczas tworzenia konta");
+      }
     }
   };
 
