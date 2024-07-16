@@ -18,6 +18,7 @@ const Add = () => {
         lastName: values.lastName,
         pesel: values.pesel,
         birthday: values.birthdayDate,
+        overridePesel: values.overridePesel,
       });
       message.success("Pomyślnie zapisano pacjenta");
       form.resetFields();

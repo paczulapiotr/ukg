@@ -14,10 +14,25 @@ public class PatientSimpleValidator : AbstractValidator<PatientSimple>
     public PatientSimpleValidator(IPatientRepository patientRepository, IAuthService authService)
     {
         _patientRepository = patientRepository;
-
-        RuleFor(x => x.Pesel).Must(ValidatePeselFormat).WithErrorCode(ValidationMessages.PeselFormatErrorCode);
-        RuleFor(x => x.Pesel).MustAsync(ValidatePeselUniqueness).WithErrorCode(ValidationMessages.PeselUniquenessErrorCode);
         _authService = authService;
+
+        WhenAsync(async (x, cancellationToken) => {
+            if (x.Id.HasValue)
+            {
+                var submitterId = _authService.GetID();
+                var patient = await _patientRepository.FindOneByID(x.Id.Value, submitterId, cancellationToken);
+
+                if(patient is not null && patient.Pesel == x.Pesel)
+                {
+                    return false;
+                }
+            }
+            return !(x.OverridePesel ?? false);
+        }, () =>
+        {
+            RuleFor(x => x.Pesel).Must(ValidatePeselFormat).WithErrorCode(ValidationMessages.PeselFormatErrorCode);
+            RuleFor(x => x.Pesel).MustAsync(ValidatePeselUniqueness).WithErrorCode(ValidationMessages.PeselUniquenessErrorCode);
+        });
     }
 
 
