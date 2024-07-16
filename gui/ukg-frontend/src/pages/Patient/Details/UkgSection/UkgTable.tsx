@@ -7,6 +7,7 @@ import { formatCompressedDateTime, formatDateTime } from "@/utility/date";
 import { pageSizes } from "@/utility/table";
 import { FilePdfOutlined } from "@ant-design/icons";
 import { DownloadButton } from "@/components/common/DownloadButton";
+import { minuteGuid } from "@/utility/common";
 
 type Props = {
   patientId: string;
@@ -68,9 +69,9 @@ const UkgTable = ({
         <DownloadButton
           icon={<FilePdfOutlined />}
           url={`/ukg/pdf/${id}`}
-          fileName={`Badanie_UKG_${formatCompressedDateTime(
+          fileName={`Badanie_${formatCompressedDateTime(
             dayjs(created)
-          )}.pdf`}
+          )}_${minuteGuid()}$.pdf`}
         >
           {"Pobierz PDF"}
         </DownloadButton>

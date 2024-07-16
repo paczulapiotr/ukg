@@ -4,6 +4,7 @@ import { Button, Flex, Form, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import PageTitle from "@/components/common/PageTitle/PageTitle";
 import PatientForm from "@/components/PatientForm/PatientForm";
+import { ApiErrorCodes, hasErrorCode } from "@/utility/axios";
 
 const Add = () => {
   const [form] = Form.useForm<PatientFormModel>();
@@ -21,8 +22,12 @@ const Add = () => {
       message.success("Pomyślnie zapisano pacjenta");
       form.resetFields();
       navigate(`/patient/${id}`);
-    } catch (err) {
-      message.error("Wystąpił błąd podczas zapisywania pacjenta");
+    } catch (err: any) {
+      if (hasErrorCode(err, ApiErrorCodes.PeselUniquenessErrorCode)) {
+        message.error("Wybrany pesel jest już przypisany do pacjenta");
+      } else {
+        message.error("Wystąpił błąd podczas zapisywania pacjenta");
+      }
     }
   };
 

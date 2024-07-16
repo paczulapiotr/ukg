@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UKG.Api.Models;
-using UKG.Backend.Exceptions;
 using UKG.Backend.Models;
 using UKG.Backend.Services;
 

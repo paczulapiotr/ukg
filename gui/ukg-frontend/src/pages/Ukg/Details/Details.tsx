@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FilePdfOutlined } from "@ant-design/icons";
 import { DownloadButton } from "@/components/common/DownloadButton";
+import { minuteGuid } from "@/utility/common";
 
 const Details = () => {
   const [form] = Form.useForm();
@@ -73,9 +74,9 @@ const Details = () => {
           <DownloadButton
             icon={<FilePdfOutlined />}
             url={`/ukg/pdf/${data?.id}`}
-            fileName={`Badanie_UKG_${formatCompressedDateTime(
+            fileName={`Badanie_${formatCompressedDateTime(
               dayjs(data?.createdAt)
-            )}.pdf`}
+            )}_${minuteGuid()}.pdf`}
           >
             {"Pobierz PDF"}
           </DownloadButton>

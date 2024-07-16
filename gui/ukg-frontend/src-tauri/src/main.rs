@@ -96,21 +96,36 @@ fn open_file(pathy: String) -> Result<(), String> {
     }
 
     #[cfg(target_os = "windows")]
-    let command = "cmd";
+    let command_path = "cmd";
     #[cfg(target_os = "windows")]
     let args = ["/C", "start", ""];
 
     #[cfg(target_os = "macos")]
-    let command = "open";
+    let command_path = "open";
     #[cfg(target_os = "macos")]
     let args: [&str; 0] = [];
 
     #[cfg(target_os = "linux")]
-    let command = "xdg-open";
+    let command_path = "xdg-open";
     #[cfg(target_os = "linux")]
     let args: [&str; 0] = [];
 
-    match Command::new(command).args(args).arg(&pathy).spawn() {
+    let mut command = Command::new(command_path);
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        command
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .stdin(std::process::Stdio::null());
+    }
+
+    match command.args(args).arg(&pathy).spawn() {
         Ok(_) => Ok(()),
         Err(e) => Err(format!("Failed to open file: {}", e)),
     }

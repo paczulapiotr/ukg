@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { formatCompressedDateTime } from "@/utility/date";
 import UpdateUserForm from "./UpdateUserForm";
 import PageTitle from "@/components/common/PageTitle/PageTitle";
+import { minuteGuid } from "@/utility/common";
 
 const Settings = () => {
   return (
@@ -20,7 +21,9 @@ const Settings = () => {
         <DownloadButton
           icon={<FileOutlined />}
           url={`/ukg/export`}
-          fileName={`Export_${formatCompressedDateTime(dayjs())}.csv`}
+          fileName={`Export_${formatCompressedDateTime(
+            dayjs()
+          )}_${minuteGuid()}.csv`}
         >
           {"Eksportuj dane do CSV"}
         </DownloadButton>

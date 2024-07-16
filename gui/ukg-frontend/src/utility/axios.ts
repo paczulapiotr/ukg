@@ -14,4 +14,7 @@ export const ApiErrorCodes = {
   PasswordsFormatIncorrect: "PasswordsFormatIncorrect",
   UserCreationError: "UserCreationError",
   PasswordUpdateError: "PasswordUpdateError",
+
+  // Pesel codes
+  PeselUniquenessErrorCode: "PeselUniquenessErrorCode",
 };

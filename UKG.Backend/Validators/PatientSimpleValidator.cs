@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using UKG.Backend.Models;
+using UKG.Backend.Services;
 using UKG.Storage.Repositories;
 
 namespace UKG.Backend.Validators;
@@ -8,13 +9,15 @@ namespace UKG.Backend.Validators;
 public class PatientSimpleValidator : AbstractValidator<PatientSimple>
 {
     private readonly IPatientRepository _patientRepository;
+    private readonly IAuthService _authService;
 
-	public PatientSimpleValidator(IPatientRepository patientRepository)
-	{
+    public PatientSimpleValidator(IPatientRepository patientRepository, IAuthService authService)
+    {
         _patientRepository = patientRepository;
 
         RuleFor(x => x.Pesel).Must(ValidatePeselFormat).WithErrorCode(ValidationMessages.PeselFormatErrorCode);
         RuleFor(x => x.Pesel).MustAsync(ValidatePeselUniqueness).WithErrorCode(ValidationMessages.PeselUniquenessErrorCode);
+        _authService = authService;
     }
 
 
@@ -46,7 +49,10 @@ public class PatientSimpleValidator : AbstractValidator<PatientSimple>
 
     private async Task<bool> ValidatePeselUniqueness(PatientSimple record, string pesel, CancellationToken cancellationToken)
     {
-        var isUnique = !await _patientRepository.Query().AnyAsync(x => x.Pesel == pesel && x.ID != record.Id, cancellationToken);
+        var submitterId = _authService.GetID();
+        var isUnique = !await _patientRepository.Query()
+            .Where(x => x.SubmitterID == submitterId)
+            .AnyAsync(x => x.Pesel == pesel && x.ID != record.Id, cancellationToken);
 
         return isUnique;
     }
