@@ -8,6 +8,7 @@ export type AddPatientModel = {
   lastName: string;
   pesel: string;
   birthday: Dayjs;
+  overridePesel?: boolean;
 };
 
 const useAddPatient = () => {
@@ -20,6 +21,7 @@ const useAddPatient = () => {
           lastName: model.lastName.trim(),
           pesel: model.pesel.trim(),
           birthday: model.birthday.format("YYYY-MM-DD"),
+          overridePesel: model.overridePesel,
         })
       ).data,
     onSuccess: () => {

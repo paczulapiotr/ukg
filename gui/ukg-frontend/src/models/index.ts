@@ -40,4 +40,5 @@ export type PatientFormModel = {
   firstName: string;
   lastName: string;
   birthdayDate: Dayjs;
+  overridePesel?: boolean;
 };

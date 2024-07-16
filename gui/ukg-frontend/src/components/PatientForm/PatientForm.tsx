@@ -31,7 +31,7 @@ const PatientForm = ({ form, patient, readonly, onFinish }: Props) => {
         setFocusedSection={setFocusedSection}
         focusedSection={focusedSection}
       >
-        <FormItems readonly={readonly} />
+        <FormItems readonly={readonly} initialValues={patient} />
       </Container>
     </Form>
   );

@@ -52,7 +52,7 @@ const UpdateUserForm = () => {
         </Form.Item>
         <Form.Item
           name="fullName"
-          label="Tytuł / Imie / Nazwisko"
+          label="Tytuł / Imię / Nazwisko"
           rules={[
             {
               required: true,

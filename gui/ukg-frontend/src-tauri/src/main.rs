@@ -46,13 +46,18 @@ fn start_backend(package_info: &tauri::PackageInfo, env: &tauri::Env) -> Child {
     let mut command = Command::new(backend_path);
 
     #[cfg(target_os = "windows")]
-    command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
 
     #[cfg(not(target_os = "windows"))]
-    command
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .stdin(std::process::Stdio::null());
+    {
+        command
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .stdin(std::process::Stdio::null());
+    }
 
     command.spawn().expect("failed to start backend process")
 }
@@ -83,13 +88,18 @@ fn open_file(pathy: String) -> Result<(), String> {
     let mut command = Command::new(command_path);
 
     #[cfg(target_os = "windows")]
-    command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    {
+        use std::os::windows::process::CommandExt;
+        command.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
 
     #[cfg(not(target_os = "windows"))]
-    command
-        .stdout(std::process::Stdio::null())
-        .stderr(std::process::Stdio::null())
-        .stdin(std::process::Stdio::null());
+    {
+        command
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::null())
+            .stdin(std::process::Stdio::null());
+    }
 
     match command.args(&args).arg(&pathy).spawn() {
         Ok(_) => Ok(()),

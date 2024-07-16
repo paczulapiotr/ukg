@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "ukg-application",
+    "productName": "Badania UKG",
     "version": "1.0.0"
   },
   "tauri": {

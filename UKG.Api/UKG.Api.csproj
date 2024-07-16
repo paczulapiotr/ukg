@@ -42,11 +42,13 @@
     <None Remove="Models\Auth\" />
     <None Remove="Filters\" />
     <None Remove="Models\Common\" />
+    <None Remove="Models\Status\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Identity\" />
     <Folder Include="Models\Auth\" />
     <Folder Include="Filters\" />
     <Folder Include="Models\Common\" />
+    <Folder Include="Models\Status\" />
   </ItemGroup>
 </Project>

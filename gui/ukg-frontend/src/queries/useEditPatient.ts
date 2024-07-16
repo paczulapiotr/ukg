@@ -9,6 +9,7 @@ export type EditPatientModel = {
   lastName: string;
   pesel: string;
   birthday: Dayjs;
+  overridePesel?: boolean;
 };
 
 const useEditPatient = () => {
@@ -21,6 +22,7 @@ const useEditPatient = () => {
           lastName: model.lastName.trim(),
           pesel: model.pesel.trim(),
           birthday: model.birthday.format("YYYY-MM-DD"),
+          overridePesel: model.overridePesel,
         })
       ).data,
     onSuccess: (_, variables) => {

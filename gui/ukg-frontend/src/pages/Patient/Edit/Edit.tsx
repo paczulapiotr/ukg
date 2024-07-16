@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import LoadingPage from "@/pages/common/LoadingPage";
 import NotFoundPage from "@/pages/common/NotFoundPage";
 import useEditPatient from "@/queries/useEditPatient";
+import { ApiErrorCodes, hasErrorCode } from "@/utility/axios";
 
 const Edit = () => {
   const [form] = Form.useForm<PatientFormModel>();
@@ -24,12 +25,17 @@ const Edit = () => {
         lastName: values.lastName,
         pesel: values.pesel,
         birthday: values.birthdayDate,
+        overridePesel: values.overridePesel,
       });
       message.success("Pomyślnie zapisano pacjenta");
       form.resetFields();
       navigate(`/patient/${patientId}`);
     } catch (err) {
-      message.error("Wystąpił błąd podczas zapisywania pacjenta");
+      if (hasErrorCode(err, ApiErrorCodes.PeselUniquenessErrorCode)) {
+        message.error("Wybrany pesel jest już przypisany do pacjenta");
+      } else {
+        message.error("Wystąpił błąd podczas zapisywania pacjenta");
+      }
     }
   };
 
