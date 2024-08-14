@@ -11,4 +11,4 @@ GUI is created using tauri v1 + react + ts in `./gui` folder. Backend logic is c
 
 # Production build
 
-Run `./scripts/builld.sh` and installers will be created in `./gui/src-tauri/target/release/bundle/` folder
+Run `./scripts/build.sh` and installers will be created in `./gui/src-tauri/target/release/bundle/` folder
