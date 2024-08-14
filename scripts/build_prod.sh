@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 rm -rf "$SCRIPT_DIR/gui/src-tauri/server"/*
 
 # Publish UKG.Api/UKG.Api.csproj in debug mode to gui/src-tauri/server
-dotnet publish "$SCRIPT_DIR/UKG.Api/UKG.Api.csproj" -c Debug -o "$SCRIPT_DIR/gui/src-tauri/server"
+dotnet publish "$SCRIPT_DIR/UKG.Api/UKG.Api.csproj" -c Release --self-contained -o "$SCRIPT_DIR/gui/src-tauri/server"
 
 # Change directory to gui/ukg-frontend using pushd
 pushd "$SCRIPT_DIR/gui"
