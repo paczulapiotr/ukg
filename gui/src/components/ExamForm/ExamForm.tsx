@@ -68,6 +68,7 @@ const ExamForm = ({
         name="ukg-examination"
         onFinish={onFinishHandle}
         style={formStyle}
+        autoComplete="off"
       >
         <Container<FocusedSection>
           readonly={readonly}

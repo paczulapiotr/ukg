@@ -64,6 +64,7 @@ const UkgTable = ({
     {
       title: "PDF",
       key: "pdf",
+      width: 150,
       align: "end",
       render: (_, { id, created }) => (
         <DownloadButton

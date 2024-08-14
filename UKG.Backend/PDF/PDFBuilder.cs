@@ -75,38 +75,38 @@ public class PDFBuilder : IPDFBuilder
 
                         Field(table, "Imię i nazwisko", patient.FullName);
 
-                        SmallField(table, 2, "Ao:", ukg.Ao);
-                        SmallField(table, 6, "ACS:", ukg.Acs);
+                        SmallField(table, "Ao:", ukg.Ao);
+                        SmallField(table, "ACS:", ukg.Acs);
 
-                        SmallField(table, 2, "LA:", ukg.La);
-                        SmallField(table, 6, "RV:", ukg.Rv);
+                        SmallField(table, "LA:", ukg.La);
+                        SmallField(table, "RV:", ukg.Rv);
 
-                        SmallField(table, 2, "LVs:", ukg.Lvs);
-                        SmallField(table, 6, "LVd:", ukg.Lvd);
+                        SmallField(table, "LVs:", ukg.Lvs);
+                        SmallField(table, "LVd:", ukg.Lvd);
 
-                        SmallField(table, 2, "IVSs:", ukg.Ivss);
-                        SmallField(table, 6, "IVSd:", ukg.Ivsd);
+                        SmallField(table, "IVSs:", ukg.Ivss);
+                        SmallField(table, "IVSd:", ukg.Ivsd);
 
-                        SmallField(table, 2, "LVPWs:", ukg.Lvpws);
-                        SmallField(table, 6, "LVPWd:", ukg.Lvpwd);
+                        SmallField(table, "LVPWs:", ukg.Lvpws);
+                        SmallField(table, "LVPWd:", ukg.Lvpwd);
 
                         Field(table, "EF:", ukg.Ef);
                         Field(table, "Kurczliwość:", ukg.Kurczliwosc);
                         Field(table, "Osierdzie:", ukg.Osierdzie);
                         Field(table, "Zastawka mitralna:", ukg.ZastawkaMitralna);
                         Field(table, "Badanie dopplerowskie:", ukg.DopplerMitralna);
-                        SmallField(table, 2, "Vmax:", ukg.VmaxMitralna);
-                        SmallField(table, 6, "Gmax:", ukg.GmaxMitralna);
+                        SmallField(table, "Vmax:", ukg.VmaxMitralna);
+                        SmallField(table, "Gmax:", ukg.GmaxMitralna);
 
                         Field(table, "Zastawka aotralna:", ukg.ZastawkaAortalna);
                         Field(table, "Badanie dopplerowskie:", ukg.DopplerAortalna);
-                        SmallField(table, 2, "Vmax:", ukg.VmaxAortalna);
-                        SmallField(table, 6, "Gmax:", ukg.GmaxAortalna);
+                        SmallField(table, "Vmax:", ukg.VmaxAortalna);
+                        SmallField(table, "Gmax:", ukg.GmaxAortalna);
 
                         Field(table, "Zastawka trójdzielna:", ukg.ZastawkaTrojdzielna);
                         Field(table, "Badanie dopplerowskie:", ukg.DopplerTrojdzielna);
-                        SmallField(table, 2, "Vmax:", ukg.VmaxTrojdzielna);
-                        SmallField(table, 6, "Gmax:", ukg.GmaxTrojdzielna);
+                        SmallField(table, "Vmax:", ukg.VmaxTrojdzielna);
+                        SmallField(table, "Gmax:", ukg.GmaxTrojdzielna);
 
                         Field(table, "Zastawka pnia płucnego:", ukg.ZastawkaPnia);
                         Field(table, "Badanie dopplerowskie:", ukg.DopplerPnia);
@@ -149,8 +149,9 @@ public class PDFBuilder : IPDFBuilder
             .AlignMiddle();
     }
 
-    static void SmallField(TableDescriptor table, uint span, string? cellOne, string? cellTwo)
+    static void SmallField(TableDescriptor table, string? cellOne, string? cellTwo)
     {
+        const uint span = 4;
         table.Cell().ColumnSpan(span).Padding(_borderGap).Border(_borderSize).Table(t =>
         {
             t.ColumnsDefinition(cd =>
@@ -160,7 +161,7 @@ public class PDFBuilder : IPDFBuilder
             });
 
             t.Cell().ColumnSpan(1).Element(BorderlessCell).Text(cellOne);
-            t.Cell().ColumnSpan(1).Element(BorderlessCell).Text(cellTwo);
+            t.Cell().ColumnSpan(span - 1).Element(BorderlessCell).Text(cellTwo);
         });
     }
 

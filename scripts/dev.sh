@@ -10,7 +10,7 @@ rm -rf "$SCRIPT_DIR/gui/src-tauri/server"/*
 dotnet build "$SCRIPT_DIR/UKG.Api/UKG.Api.csproj" -c Debug -o "$SCRIPT_DIR/gui/src-tauri/server"
 
 # Change directory to gui/ukg-frontend using pushd
-pushd "$SCRIPT_DIR/gui/ukg-frontend"
+pushd "$SCRIPT_DIR/gui"
 
 # Run "npm run tauri dev" command
 npm run tauri dev

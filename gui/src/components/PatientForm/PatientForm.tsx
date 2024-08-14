@@ -24,6 +24,7 @@ const PatientForm = ({ form, patient, readonly, onFinish }: Props) => {
       className={classNames({ ["readonly-form"]: readonly })}
       form={form}
       onFinish={onFinish}
+      autoComplete="off"
     >
       <Container
         name="1"

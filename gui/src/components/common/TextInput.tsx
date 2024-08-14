@@ -35,7 +35,7 @@ const TextInput = <TForm,>({
         required={required}
         rules={[{ required, message: t(`${name}_error`) }, ...(rules ?? [])]}
       >
-        <Input placeholder={t(name)} />
+        <Input placeholder={t(name)} autoComplete="off" />
       </Form.Item>
     </>
   );

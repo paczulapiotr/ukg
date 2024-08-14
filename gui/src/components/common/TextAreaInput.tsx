@@ -35,6 +35,7 @@ const TextAreaInput = <TForm,>({
         <Input.TextArea
           placeholder={t(name)}
           autoSize={{ minRows: 1, maxRows: 10 }}
+          autoComplete="off"
         />
       </Form.Item>
     </>
