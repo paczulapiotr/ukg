@@ -35,7 +35,6 @@ const ExamForm = ({
   useEffect(() => {
     if (version) {
       form.resetFields();
-      console.log("reset fields");
     }
   }, [version]);
 

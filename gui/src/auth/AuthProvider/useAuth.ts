@@ -52,7 +52,7 @@ export const useAuth = (): UseAuthResult => {
         result = "success";
       }
     } catch (err: any) {
-      console.log("Error while logging in", err);
+      console.error("Error while logging in", err);
       if (err?.response?.status === 401) {
         result = "incorrect_credentials";
       }
