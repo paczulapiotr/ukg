@@ -5,9 +5,8 @@ import UnauthorizedLayout from "./UnauthorizedLayout/UnauthorizedLayout";
 import LoadingPage from "@/pages/common/LoadingPage";
 
 const MainLayout: React.FC = () => {
-  const {
-    auth: { isAuthorized, isLoading },
-  } = useAuth();
+  const { auth } = useAuth();
+  const { isAuthorized, isLoading } = auth;
 
   return isLoading ? (
     <LoadingPage />

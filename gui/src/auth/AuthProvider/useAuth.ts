@@ -4,13 +4,18 @@ import instance from "../../services/api";
 import { AuthorizedResponse } from "./types";
 import { mapAuthToContext } from "./utility";
 import { AuthApi } from "@/services/auth";
-import { ApiErrorCodes, hasErrorCode } from "@/utility/axios";
+import {
+  ApiErrorCodes,
+  hasErrorCode,
+  updateAxiosIntercepters,
+} from "@/utility/axios";
 
 type UseAuthResult = {
   auth: Authorization;
   login: (username: string, password: string) => Promise<LoginResult>;
   logout: () => Promise<void>;
-  refreshToken: () => Promise<void>;
+  notAuthorized: () => void;
+  refreshToken: (refToken?: string, accessToken?: string) => Promise<void>;
   register: (
     fullName: string,
     username: string,
@@ -53,6 +58,7 @@ export const useAuth = (): UseAuthResult => {
       }
     } finally {
       if (result === "success" && response) {
+        updateAxiosIntercepters(response.token);
         setAuth(response);
       } else {
         setCtx(() => ({ isAuthorized: false, isLoading: false }));
@@ -66,6 +72,7 @@ export const useAuth = (): UseAuthResult => {
     try {
       await instance.post("auth/logout");
     } finally {
+      updateAxiosIntercepters();
       setCtx(() => ({ isAuthorized: false, isLoading: false }));
     }
   };
@@ -96,18 +103,26 @@ export const useAuth = (): UseAuthResult => {
     }
   };
 
-  const refreshToken = async () => {
+  const refreshToken = async (refToken?: string, accessToken?: string) => {
     try {
-      const authorization = await AuthApi.refreshToken(ctx.refreshToken?.token);
+      const authorization = await AuthApi.refreshToken(
+        refToken ?? ctx.refreshToken?.token,
+        accessToken ?? ctx.accessToken?.token
+      );
+      updateAxiosIntercepters(authorization.accessToken?.token);
       setCtx(() => authorization);
     } catch (err) {
       setCtx(() => ({ isAuthorized: false, isLoading: false }));
     }
   };
 
+  const notAuthorized = () => {
+    setCtx((auth) => ({ ...auth, isLoading: false }));
+  };
+
   const setAuth = (response: AuthorizedResponse) => {
     setCtx(() => mapAuthToContext(response));
   };
 
-  return { login, logout, register, refreshToken, auth: ctx };
+  return { login, logout, register, refreshToken, auth: ctx, notAuthorized };
 };

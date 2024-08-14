@@ -125,7 +125,6 @@ public class AuthenticateController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(RefreshTokenModel tokenModel)
     {
@@ -134,7 +133,7 @@ public class AuthenticateController : ControllerBase
             return BadRequest("Invalid client request");
         }
 
-        var accessToken = AccessToken;
+        var accessToken = tokenModel.AccessToken;
         var refreshToken = tokenModel.RefreshToken;
 
         var principal = GetPrincipalFromExpiredToken(accessToken);
@@ -143,7 +142,7 @@ public class AuthenticateController : ControllerBase
             return BadRequest("Invalid access token or refresh token");
         }
 
-        var username = principal.Identity.Name;
+        var username = principal?.Identity?.Name;
 
         var user = await _userManager.FindByNameAsync(username);
 
@@ -192,17 +191,17 @@ public class AuthenticateController : ControllerBase
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
 
         IdentityResult result;
-        if(model.CurrentPassword == "ADMIN")
+        if (model.CurrentPassword == "ADMIN")
         {
             await _userManager.RemovePasswordAsync(user);
-            result =  await _userManager.AddPasswordAsync(user, model.NewPassword);
+            result = await _userManager.AddPasswordAsync(user, model.NewPassword);
         }
         else
         {
             result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
         }
-        
-        if(!result.Succeeded)
+
+        if (!result.Succeeded)
         {
             throw new MainException(ApiExceptionCodes.PasswordUpdateError, string.Join(", ", result.Errors));
         }
@@ -225,9 +224,9 @@ public class AuthenticateController : ControllerBase
     [Authorize]
     [HttpGet]
     [Route("info")]
-    public async Task<IActionResult> Info()
+    public IActionResult Info()
     {
-        var username = User.Identity.Name;
+        var username = User?.Identity?.Name;
 
         return Ok(new
         {
